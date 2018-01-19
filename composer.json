@@ -1,0 +1,22 @@
+{
+    "name": "asraful3161/f3_helper",
+    "description": "A composer package to integrate functions for fatfree microservices",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Asraful3161",
+            "email": "asraful3161@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require":{
+
+        "php": ">=5.4"
+
+    },"autoload": {
+
+    	"psr-4": {"F3_helper\\": "src/classes"},
+    	"files": ["src/f3_functions.php"]
+        
+	}
+}
