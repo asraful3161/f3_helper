@@ -1,5 +1,13 @@
 <?php
 
+function view($view_file_name, $data=[], $cache_time=0, $mime_type='text/html'){
+	return \View::instance()->render($view_file_name, $mime_type, $data, $cache_time);
+}
+
+function preview($view_file_name, $data=[], $cache_time=0, $mime_type='text/html'){
+	return \Preview::instance()->render($view_file_name, $mime_type, $data, $cache_time);
+}
+
 function f3(){
 	return \Base::instance();
 }
