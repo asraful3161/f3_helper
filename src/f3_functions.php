@@ -1,16 +1,5 @@
 <?php
 //All helper functions for f3 microservices
-function tpl($view_file_name){
-	return \Template::instance()->render($view_file_name);
-}
-
-function view($view_file_name, $data=[], $cache_time=0, $mime_type='text/html'){
-	return \View::instance()->render($view_file_name, $mime_type, $data, $cache_time);
-}
-
-function preview($view_file_name, $data=[], $cache_time=0, $mime_type='text/html'){
-	return \Preview::instance()->render($view_file_name, $mime_type, $data, $cache_time);
-}
 
 function f3(){
 	return \Base::instance();
@@ -122,4 +111,16 @@ function dd($var, $pretty = true){
     ($pretty) ? print_r($var) : var_dump($var);
     echo "</pre>\n";
     die;
+}
+
+function view(){
+	return \View::instance();
+}
+
+function preview(){
+	return \Preview::instance();
+}
+
+function tpl(){
+	return \Template::instance();
 }
