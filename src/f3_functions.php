@@ -97,8 +97,8 @@ function check_acl($permission_names){
 
 }
 
-function dd($var, $pretty = true)
-{
+function dd($var, $pretty = true){
+	
     $backtrace = debug_backtrace();
     echo "\n<pre>\n";
     if (isset($backtrace[0]['file'])) {
