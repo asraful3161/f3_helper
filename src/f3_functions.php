@@ -22,8 +22,10 @@ function json($data=null, $response_code=200){
 
 function res_json($msg='Empty', $status_code=200, $data=null){
 	if($status_code==null) $status_code=200;
+	$status='error';
+	if($status_code==200 || $status_code==201 || $status_code==204) $status='success';
 	header('Content-Type: application/json', true, $status_code);
-	echo json_encode(['msg'=>$msg, 'data'=>$data, 'status_code'=>$status_code]);
+	echo json_encode(['msg'=>$msg, 'data'=>$data, 'status_code'=>$status_code, 'status'=>$status]);
 }
 
 function verify_method($args=[]){
