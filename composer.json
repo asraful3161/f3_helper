@@ -8,7 +8,7 @@
             "email": "asraful3161@gmail.com"
         }
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
     "require":{
 
         "php": ">=5.4"
