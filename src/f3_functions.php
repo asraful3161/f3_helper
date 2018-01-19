@@ -1,4 +1,8 @@
 <?php
+//All helper functions for f3 microservices
+function tpl($view_file_name){
+	return \Template::instance()->render($view_file_name);
+}
 
 function view($view_file_name, $data=[], $cache_time=0, $mime_type='text/html'){
 	return \View::instance()->render($view_file_name, $mime_type, $data, $cache_time);
