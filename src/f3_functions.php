@@ -7,7 +7,10 @@ function f3(){
 
 function url($args=''){
 	$f3=\Base::instance();
-	return $f3->SCHEME.'://'.$f3->HOST.$f3->BASE.'/'.ltrim($args, '/');
+	$port='';
+	if($f3->PORT) $port=':'.$f3->PORT;
+	return $f3->SCHEME.'://'.$f3->HOST.$port.$f3->BASE.'/'.ltrim($args, '/');
+	//return $f3->REALM.'/'.ltrim($args, '/');
 }
 
 function db(){
