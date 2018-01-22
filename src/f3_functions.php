@@ -5,6 +5,11 @@ function f3(){
 	return \Base::instance();
 }
 
+function url($args=''){
+	$f3=\Base::instance();
+	return $f3->SCHEME.'://'.$f3->HOST.$f3->BASE.'/'.ltrim($args, '/');
+}
+
 function db(){
 	return \F3_helper\DB::instance()->get();
 }
