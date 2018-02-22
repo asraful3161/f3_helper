@@ -132,3 +132,7 @@ function preview(){
 function tpl(){
 	return \Template::instance();
 }
+
+function jig($dir=NULL){
+	return \F3_helper\Jig::instance($dir)->get();
+}
