@@ -136,3 +136,7 @@ function tpl(){
 function jig($dir=NULL){
 	return \F3_helper\Jig::instance($dir)->get();
 }
+
+function jig_mapper($file){
+	return new \DB\Jig\Mapper(jig(), $file);
+}
