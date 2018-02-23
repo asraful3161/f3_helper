@@ -140,3 +140,29 @@ function jig($dir=NULL){
 function jig_mapper($file){
 	return new \DB\Jig\Mapper(jig(), $file);
 }
+
+function unpkg($pkg=NULL){
+
+	$url="https://unpkg.com";
+
+	if(is_string($pkg)){
+
+		if(preg_match("/\.css$/", $pkg)) return "<link rel='stylesheet' type='text/css' href='{$url}/{$pkg}'>";
+		elseif(preg_match("/\.js$/", $pkg)) return "<script src='{$url}/{$pkg}'></script>";
+
+	}elseif(is_array($pkg)){
+
+		$html='';
+
+		foreach($pkg as $row){
+
+			if(preg_match("/\.css$/", $row)) $html.="<link rel='stylesheet' type='text/css' href='{$url}/{$row}'>";
+			elseif(preg_match("/\.js$/", $row)) $html.="<script src='{$url}/{$row}'></script>";
+
+		}
+
+		return $html;
+
+	}
+
+}
