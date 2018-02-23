@@ -166,3 +166,7 @@ function unpkg($pkg=NULL){
 	}
 
 }
+
+function fa($icon){
+	return "<i class='fa {$icon}' aria-hidden='true'></i>";
+}
