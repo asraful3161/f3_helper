@@ -1,5 +1,5 @@
 <?php
-namespace F3_helper;
+namespace F3;
 
 class DB extends \Prefab{
 

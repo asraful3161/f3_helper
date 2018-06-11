@@ -14,7 +14,7 @@ function url($args=''){
 }
 
 function db(){
-	return \F3_helper\DB::instance()->get();
+	return \F3\DB::instance()->get();
 }
 
 function mapper($table){
@@ -134,7 +134,7 @@ function tpl(){
 }
 
 function jig($dir=NULL){
-	return \F3_helper\Jig::instance($dir)->get();
+	return \F3\Jig::instance($dir)->get();
 }
 
 function jig_mapper($file){
