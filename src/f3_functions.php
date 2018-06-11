@@ -1,8 +1,18 @@
 <?php
 //All helper functions for f3 microservices
 
-function f3(){
-	return \Base::instance();
+function f3($key=NULL, $value=NULL){
+
+	if($key && $value){
+
+		return \Base::instance()->set($key, $value);
+
+	}elseif($key){
+
+		return \Base::instance()->get($key);
+
+	}else return \Base::instance();
+	
 }
 
 function url($args=''){
