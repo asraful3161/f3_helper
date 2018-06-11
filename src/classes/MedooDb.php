@@ -1,4 +1,5 @@
 <?php
+namespace F3;
 
 use Medoo\Medoo;
 
