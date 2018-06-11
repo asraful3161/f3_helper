@@ -15,7 +15,7 @@
 
     },"autoload": {
 
-    	"psr-4": {"F3_helper\\": "src/classes"},
+    	"psr-4": {"F3\\": "src/classes"},
     	"files": ["src/f3_functions.php"]
         
 	}
