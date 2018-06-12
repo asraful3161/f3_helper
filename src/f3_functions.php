@@ -181,6 +181,6 @@ function fa($icon){
 	return "<i class='fa {$icon}' aria-hidden='true'></i>";
 }
 
-function mdb(){
-	return \F3\MedooDb::instance();
+function medoo(){
+	return \F3\DB::instance()->medoo();
 }
