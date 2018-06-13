@@ -23,22 +23,47 @@ class Auth extends \Prefab{
 			'name'=>NULL,
 			'username'=>NULL,
 			'email'=>NULL,
-			'password'=>NULL,
+			'password'=>NULL
 		];
 
-		$attr=(Object) array_merge($attr, $args);
+		$attr=array_merge($attr, $args);
 
 		foreach($attr as $row){
-			if(!$row) return FALSE;
+
+			if(!$row) return [
+				'msg'=>"{$row} field not provided.",
+				'status'=>FALSE
+			];
+
 		}
 
+		$attr['password']=\Bcrypt::instance()->hash($attr['password']);
+
+		/*
+
 		$result=db()->exec("
-			INSERT INTO `users`(`name`, `username`, `email`, `password`, `status`, 'email_verified')
-			VALUES('$attr->name','$attr->username', '$attr->email', '$attr->password', '0', '0')
+			INSERT INTO `users`(`name`, `username`, `email`, `password`)
+			VALUES('$attr->name','$attr->username', '$attr->email', '$attr->password')
 		");
 
-		if($result) return TRUE;
-		return FALSE;
+		*/
+
+		$result=medoo()->insert('users', $attr);
+
+		if($result){
+
+			dd($result);
+
+			return [
+				'msg'=>"New user created successfully!.",
+				'status'=>TRUE
+			];
+		}
+
+		return [
+			'msg'=>"Sorry!, unable to save user in database.",
+			'status'=>FALSE
+		];
 
 	}
 
