@@ -131,8 +131,11 @@ function dd($var, $pretty = true){
     die;
 }
 
-function view(){
+function view($filepath=NULL, $value=[], $cType='text/html', $ext='.html'){
+
+	if($filepath) return \View::instance()->render($filepath.$ext, $cType, $value);
 	return \View::instance();
+
 }
 
 function preview(){
@@ -183,4 +186,14 @@ function fa($icon){
 
 function medoo(){
 	return \F3\DB::instance()->medoo();
+}
+
+function rv($msg=NULL, $status=FALSE, $data=NULL){ //full abbreviation return_value()
+
+	return [
+		'msg'=>$msg,
+		'status'=>$status,
+		'data'=>$data
+	];
+
 }

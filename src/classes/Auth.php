@@ -3,7 +3,7 @@ namespace F3;
 
 class Auth extends \Prefab{
 
-	private $auth;
+	private $auth, $sess_id; //sess_id is session id as a alias to create a random hash on instantiation.
 	
 	public function user(){
 
@@ -28,42 +28,36 @@ class Auth extends \Prefab{
 
 		$attr=array_merge($attr, $args);
 
-		foreach($attr as $row){
+		foreach($attr as $key=>$row){
 
-			if(!$row) return [
-				'msg'=>"{$row} field not provided.",
-				'status'=>FALSE
-			];
+			if(!$row) return rv("{$key} field not provided.", FALSE);
 
 		}
 
 		$attr['password']=\Bcrypt::instance()->hash($attr['password']);
 
-		/*
+		medoo()->insert('users', $attr);
 
-		$result=db()->exec("
-			INSERT INTO `users`(`name`, `username`, `email`, `password`)
-			VALUES('$attr->name','$attr->username', '$attr->email', '$attr->password')
-		");
+		if(medoo()->id()){
 
-		*/
+			$signup_id=medoo()->id();
 
-		$result=medoo()->insert('users', $attr);
+			$user=medoo()->get('users', ['id', 'name','email'], ['id'=>$signup_id]);
 
-		if($result){
+			f3('SESSION.auth', [
+				'status'=>TRUE,
+				'user'=>$user
+			]);
 
-			dd($result);
+			return rv(
+				"New user created successfully!.",
+				TRUE,
+				['user'=>$user]
+			);
 
-			return [
-				'msg'=>"New user created successfully!.",
-				'status'=>TRUE
-			];
 		}
 
-		return [
-			'msg'=>"Sorry!, unable to save user in database.",
-			'status'=>FALSE
-		];
+		return rv("Sorry!, unable to save user in database.", FALSE);
 
 	}
 
