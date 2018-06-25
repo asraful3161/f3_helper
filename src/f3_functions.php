@@ -197,3 +197,9 @@ function rv($msg=NULL, $status=FALSE, $data=NULL){ //full abbreviation return_va
 	];
 
 }
+
+function twig($file, $data=[]){
+
+	\F3\Twig::instance()->render($file, $data);
+
+}
