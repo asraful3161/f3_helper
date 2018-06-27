@@ -154,30 +154,28 @@ function jig_mapper($file){
 	return new \DB\Jig\Mapper(jig(), $file);
 }
 
+function cdn($url){
+	if(preg_match("/\.css$/", $url)) return "<link rel='stylesheet' type='text/css' href='{$url}'>";
+	elseif(preg_match("/\.js$/", $url)) return "<script src='{$url}'></script>";
+}
+
 function unpkg($pkg=NULL){
-
 	$url="https://unpkg.com";
-
-	if(is_string($pkg)){
-
-		if(preg_match("/\.css$/", $pkg)) return "<link rel='stylesheet' type='text/css' href='{$url}/{$pkg}'>";
-		elseif(preg_match("/\.js$/", $pkg)) return "<script src='{$url}/{$pkg}'></script>";
-
-	}elseif(is_array($pkg)){
-
+	if(is_string($pkg)) return cdn($url.'/'.$pkg);
+	elseif(is_array($pkg)){
 		$html='';
-
-		foreach($pkg as $row){
-
-			if(preg_match("/\.css$/", $row)) $html.="<link rel='stylesheet' type='text/css' href='{$url}/{$row}'>";
-			elseif(preg_match("/\.js$/", $row)) $html.="<script src='{$url}/{$row}'></script>";
-
-		}
-
+		foreach($pkg as $row) $html.=cdn($url.'/'.$row);
 		return $html;
-
 	}
+}
 
+function jsdelivr($cdn=NULL, $type='npm'){
+	$url="https://cdn.jsdelivr.net";
+	if(is_string($cdn)) return cdn($url.'/'.$type.'/'.$cdn);
+	elseif(is_array($cdn)){
+		$url.="/combine/{$type}/".implode(",{$type}/", $cdn);
+		return cdn($url);
+	}
 }
 
 function fa($icon){
