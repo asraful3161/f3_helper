@@ -18,12 +18,25 @@ class Twig  extends \Prefab{
 
 		$this->twig->addFunction(new \Twig_Function('jsdelivr', function($cdn=NULL, $type='npm'){
 
-			$url="https://cdn.jsdelivr.net";
-			if(is_string($cdn)) return cdn($url.'/'.$type.'/'.$cdn);
-			elseif(is_array($cdn)){
-				$url.="/combine/{$type}/".implode(",{$type}/", $cdn);
-				return cdn($url);
-			}
+			return jsdelivr($cdn, $type);
+
+		}));
+
+		$this->twig->addFunction(new \Twig_Function('url', function($args=''){
+
+			return url($args);
+
+		}));
+
+		$this->twig->addFunction(new \Twig_Function('cdn', function($url){
+
+			return cdn($url);
+
+		}));
+
+		$this->twig->addFunction(new \Twig_Function('fa', function($icon){
+
+			return fa($icon);
 
 		}));
 
