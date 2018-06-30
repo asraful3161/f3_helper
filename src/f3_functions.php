@@ -116,21 +116,6 @@ function check_acl($permission_names){
 
 }
 
-function dd($var, $pretty = true){
-	
-    $backtrace = debug_backtrace();
-    echo "\n<pre>\n";
-    if (isset($backtrace[0]['file'])) {
-        echo $backtrace[0]['file'] . "\n\n";
-    }
-    echo "Type: " . gettype($var) . "\n";
-    echo "Time: " . date('c') . "\n";
-    echo "---------------------------------\n\n";
-    ($pretty) ? print_r($var) : var_dump($var);
-    echo "</pre>\n";
-    die;
-}
-
 function view($filepath=NULL, $value=[], $cType='text/html', $ext='.html'){
 
 	if($filepath) return \View::instance()->render($filepath.$ext, $cType, $value);
@@ -199,5 +184,31 @@ function rv($msg=NULL, $status=FALSE, $data=NULL){ //full abbreviation return_va
 function twig($file, $data=[]){
 
 	\F3\Twig::instance()->render($file, $data);
+
+}
+
+function auth($action=NULL, $args=[]){
+
+	if(!$action) return \F3\DAuth::instance()->user();
+
+	/*Need to implement
+	elseif($action=='register'){
+
+	}elseif($action=='login'){
+
+	}elseif($action=='logout'){
+
+	}elseif($action=='logout'){
+
+	}
+	*/
+
+}
+
+function flash($key=NULL, $value=NULL){
+
+	if($key && $value) return \F3\Flash::instance()->set($key, $value);
+	elseif($key) return \F3\Flash::instance()->get($key);
+	else return \F3\Flash::instance();
 
 }
