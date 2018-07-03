@@ -1,7 +1,16 @@
 <?php
 namespace F3;
 
-class Controller extends \Prefab{
+abstract class Controller extends \Prefab{
+
+	protected $index='/';
+
+	public function index(){
+
+		\Base::instance()->reroute($this->index);
+
+	}
+
 
 	protected function auth($role=NULL, $permission=NULL){
 
