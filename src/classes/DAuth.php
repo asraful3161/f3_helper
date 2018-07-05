@@ -1,6 +1,7 @@
 <?php
 namespace F3;
 use \Delight\Auth\Auth;
+use \F3\Std;
 
 class DAuth extends \Prefab{
 
@@ -21,21 +22,33 @@ class DAuth extends \Prefab{
 	protected function remember($flag=FALSE){
 
 		if($flag) return (int) (60 * 60 * 24 * $this->$rememberDuration); //in days
-		else return NULL
+		else return NULL;
 
 	}
 
-	public function register($email, $password, $username){
+	public function register(Std $args){
 
 		try{
 
 		    $this->userId=$this->auth->register(
-		    	$email,
-		    	$password,
-		    	$username,
-		    	function ($selector, $token){
+		    	$args->email,
+		    	$args->password,
+		    	$args->username,
+		    	function($selector, $token) use($args){
 
 		        	// send `$selector` and `$token` to the user (e.g. via email)
+		        	$smtp=new \SMTP(
+		        		'smtp.mailtrap.io',
+		        		2525,
+		        		'PLAIN',
+		        		'9771ea9c359571',
+		        		'e7161257b39e93'
+		        	);
+
+					$smtp->set('From', 'asraful3161@gmail.com');
+					$smtp->set('To', $args->email);
+					$smtp->set('Subject', 'Email verification link');
+					$smtp->send(url("auth/verify_email?selector={$selector}&token={$token}"));
 
 		    	}
 			);
@@ -67,11 +80,11 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function login($email, $password, $remember=NULL){
+	public function login(Std $args){
 
 		try {
 
-		    $this->auth->login($email, $password, $this->remember($remember));
+		    $this->auth->login($args->email, $args->password, $this->remember($args->remember));
 
 		    // user is logged in
 		    return rv('User is logged in successfully!.', TRUE);
@@ -100,11 +113,11 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function confirmEmail(){
+	public function confirmEmail(Std $args){
 
 		try{
 
-		    $this->auth->confirmEmail($selector, $token);
+		    $this->auth->confirmEmail($args->selector, $args->token);
 
 		    // email address has been verified
 		    return rv('Email address has been verified successfully!.', TRUE);

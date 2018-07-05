@@ -3,10 +3,16 @@ namespace F3;
 
 class Flash extends \Prefab{
 
+	protected $f3;
+
+	public function __construct(){
+		$this->f3=\Base::instance();
+	}
+
 	public function set($key, $value=NULL){
 
-		if(is_string($key)) \Base::instance()->set("SESSION.flash.{$key}", $value);
-		elseif(is_array($key)) \Base::instance()->set("SESSION.flash", $key);
+		if(is_string($key)) $this->f3->set("SESSION.flash.{$key}", $value);
+		elseif(is_array($key)) $this->f3->set("SESSION.flash", $key);
 
 	}
 
@@ -14,13 +20,13 @@ class Flash extends \Prefab{
 
 		if($key){
 
-			$value=\Base::instance()->get("SESSION.flash.{$key}");
-			\Base::instance()->clear("SESSION.flash.{$key}");
+			$value=$this->f3->get("SESSION.flash.{$key}");
+			$this->f3->clear("SESSION.flash.{$key}");
 
 		}else{
 
-			$value=\Base::instance()->get("SESSION.flash");
-			\Base::instance()->clear("SESSION.flash");
+			$value=$this->f3->get("SESSION.flash");
+			$this->f3->clear("SESSION.flash");
 
 		}
 				
@@ -30,7 +36,7 @@ class Flash extends \Prefab{
 
 	public function exists($key){
 
-		return \Base::instance()->exists("SESSION.flash.{$key}");
+		return $this->f3->exists("SESSION.flash.{$key}");
 
 	}
 

@@ -78,7 +78,7 @@ function matrix_uid($cell=null, $encrypt=false){
 
 function validator($args){
 
-	Valitron\Validator::addRule('unique', function($field, $value, array $params, array $fields){
+	\Valitron\Validator::addRule('unique', function($field, $value, array $params, array $fields){
 
 		//die(pr($params));
 
