@@ -11,17 +11,30 @@ class Flash extends \Prefab{
 
 	public function set($key, $value=NULL){
 
-		if(is_string($key)) $this->f3->set("SESSION.flash.{$key}", $value);
-		elseif(is_array($key)) $this->f3->set("SESSION.flash", $key);
+		if(is_string($key)){
+
+			$this->f3->set("SESSION.flash.{$key}", $value);
+
+		}elseif(is_array($key) && $this->f3->exists('SESSION.flash')){
+
+			$this->f3->set(
+				"SESSION.flash",
+				array_merge(
+					$this->f3->get('SESSION.flash'),
+					$key
+				)
+			);
+
+		}elseif(is_array($key)) $this->f3->set("SESSION.flash", $key);
 
 	}
 
-	public function get($key=NULL){
+	public function get($key=NULL, $keepAlive=NULL){
 
 		if($key){
 
 			$value=$this->f3->get("SESSION.flash.{$key}");
-			$this->f3->clear("SESSION.flash.{$key}");
+			if(!$keepAlive) $this->f3->clear("SESSION.flash.{$key}");
 
 		}else{
 

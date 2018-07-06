@@ -15,12 +15,21 @@ function f3($key=NULL, $value=NULL){
 	
 }
 
+/*
 function url($args=''){
 	$f3=\Base::instance();
 	$port='';
 	if($f3->PORT) $port=':'.$f3->PORT;
 	return $f3->SCHEME.'://'.$f3->HOST.$port.$f3->BASE.'/'.ltrim($args, '/');
 	//return $f3->REALM.'/'.ltrim($args, '/');
+}
+*/
+
+function url($url=NULL){
+
+	if($url) return \F3\Url::instance()->to($url);
+	return \F3\Url::instance();
+
 }
 
 function db(){
@@ -91,7 +100,14 @@ function validator($args){
 		}elseif(matrix_exists($params[0].'.'.$field, $value)) return false;
 		return true;
 
-	}, 'Sorry!, {field} already exists in records');
+	}, '{field} already exists in records');
+
+	\Valitron\Validator::addRule('exists', function($field, $value, array $params, array $fields){
+
+		if(matrix_exists($params[0].'.'.$field, $value)) return TRUE;
+		return FALSE;
+
+	}, '{field} does not exists in records');
 
 	return new Valitron\Validator($args);
 	
@@ -209,6 +225,21 @@ function flash($key=NULL, $value=NULL){
 
 	if($key && $value) return \F3\Flash::instance()->set($key, $value);
 	elseif($key) return \F3\Flash::instance()->get($key);
-	else return \F3\Flash::instance();
+	return \F3\Flash::instance();
+
+}
+
+function redirect($url=NULL){
+	return \F3\Redirect::instance($url);
+}
+
+function xSlash($string){
+	return '/'.ltrim($string, '/');
+}
+
+function input($key=NULL){
+
+	if($key) return \F3\Input::instance()->get($key);
+	return \F3\Input::instance();
 
 }

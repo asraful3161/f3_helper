@@ -22,9 +22,9 @@ class Twig  extends \Prefab{
 
 		}));
 
-		$this->twig->addFunction(new \Twig_Function('url', function($args=''){
+		$this->twig->addFunction(new \Twig_Function('url', function($url=NULL){
 
-			return url($args);
+			return url($url);
 
 		}));
 
@@ -39,6 +39,22 @@ class Twig  extends \Prefab{
 			return fa($icon);
 
 		}));
+
+		$this->twig->addFunction(new \Twig_Function('f3', function(){
+
+			return \Base::instance();
+
+		}));
+
+		$this->twig->addGlobal('f3', \Base::instance());
+
+		$this->twig->addGlobal('url', \F3\Url::instance());
+
+		$this->twig->addGlobal('flash', \F3\Flash::instance());
+
+		$this->twig->addGlobal('input', \F3\Input::instance());
+
+		$this->twig->addGlobal('error', \F3\Input::instance()->error());
 
 	}
 
