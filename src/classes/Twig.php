@@ -64,4 +64,8 @@ class Twig  extends \Prefab{
 
 	}
 
+	public function get(){
+		return $this->twig;
+	}
+
 }

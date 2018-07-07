@@ -14,10 +14,9 @@ abstract class Controller extends \Prefab{
 
 	protected function auth($role=NULL, $permission=NULL){
 
-		$f3=\Base::instance();
-
-		if(empty($f3->get('SESSION.auth'))) $f3->reroute('/');
+		if(!\F3\DAuth::instance()->user()->check()) return \Base::instance()->error(404);
 
 	}
+	
 
 }

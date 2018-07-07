@@ -25,4 +25,12 @@ class Url extends \Prefab{
 		return $this->f3->REALM;
 	}
 
+	public function asset($url=''){
+		return $this->to('assets/'.ltrim($url, '/'));
+	}
+
+	public function previous(){
+		return $this->f3->get('HEADERS.Referer');
+	}
+
 }
