@@ -204,22 +204,8 @@ function twig($file=NULL, $data=[]){
 
 }
 
-function auth($action=NULL, $args=[]){
-
-	if(!$action) return \F3\DAuth::instance()->user();
-
-	/*Need to implement
-	elseif($action=='register'){
-
-	}elseif($action=='login'){
-
-	}elseif($action=='logout'){
-
-	}elseif($action=='logout'){
-
-	}
-	*/
-
+function auth(){
+	return \F3\DAuth::instance();
 }
 
 function flash($key=NULL, $value=NULL){

@@ -33,4 +33,11 @@ class Url extends \Prefab{
 		return $this->f3->get('HEADERS.Referer');
 	}
 
+	public function intended($url=NULL){
+
+		if($url) \F3\Flash::instance()->set('urls.intended', $url);
+		else return \F3\Flash::instance()->get('urls.intended');
+
+	}
+
 }

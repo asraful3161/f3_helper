@@ -14,7 +14,11 @@ abstract class Controller extends \Prefab{
 
 	protected function auth($role=NULL, $permission=NULL){
 
-		if(!\F3\DAuth::instance()->user()->check()) return \Base::instance()->error(404);
+		if(!\F3\DAuth::instance()->user()->check()){
+			$url=\F3\Url::instance();
+			$url->intended($url->current());
+			return \Base::instance()->error(404);
+		}
 
 	}
 	

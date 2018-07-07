@@ -5,7 +5,13 @@ use \F3\Std;
 
 class DAuth extends \Prefab{
 
-	protected $auth, $userId, $rememberDuration=30;
+	protected
+		$auth,
+		$userId,
+		$rememberDuration=30,
+		$verify,
+		$failCallback,
+		$successCallback;
 
 	public function __construct(){
 
@@ -87,6 +93,9 @@ class DAuth extends \Prefab{
 		    $this->auth->login($args->email, $args->password, $this->remember($args->remember));
 
 		    // user is logged in
+		    $intendedUrl=\F3\Url::instance()->intended();
+		    if($intendedUrl) \F3\Redirect::instance()->toUrl($intendedUrl);
+
 		    return rv('User is logged in successfully!.', TRUE);
 
 		}catch(\Delight\Auth\InvalidEmailException $e){
@@ -153,8 +162,48 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function user(){
-		return $this->auth;
+	public function user($role=NULL, $permission=NULL){
+		($this->auth->check())?$this->verify=TRUE:$this->verify=FALSE;
+		return $this;
+	}
+
+	public function onFail($callback){
+		$this->failCallback=$callback;
+		return $this;
+	}
+
+	public function onSuccess($callback){
+		$this->successCallback=$callback;
+		return $this;
+	}
+
+	public function execute(){
+
+		if($this->verify){
+
+			return call_user_func($this->successCallback);
+
+		}else{
+
+			$url=\F3\Url::instance();
+			$url->intended($url->current());
+			
+			return call_user_func($this->failCallback);
+
+		}
+
+	}
+
+	public function check(){
+
+		return $this->auth->check();
+
+	}
+
+	public function guest(){
+
+		return (!$this->auth->check())?TRUE:FALSE;
+
 	}
 
 }
