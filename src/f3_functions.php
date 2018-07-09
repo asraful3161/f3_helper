@@ -217,7 +217,8 @@ function flash($key=NULL, $value=NULL){
 }
 
 function redirect($url=NULL){
-	return \F3\Redirect::instance($url);
+	if($url) return \F3\Redirect::instance()->to($url);
+	return \F3\Redirect::instance(); 
 }
 
 function xSlash($string){
@@ -228,5 +229,13 @@ function input($key=NULL){
 
 	if($key) return \F3\Input::instance()->get($key);
 	return \F3\Input::instance();
+
+}
+
+function middleware($key=NULL, $action=NULL){
+
+	if($key && $action) return \F3\Middleware::instance()->set($key, $action);
+	elseif($key) return \F3\Middleware::instance()->get($key);
+	return \F3\Middleware::instance();
 
 }

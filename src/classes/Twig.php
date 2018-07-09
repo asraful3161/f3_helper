@@ -4,17 +4,16 @@ namespace F3;
 
 class Twig  extends \Prefab{
 
-	protected $loader, $twig;
+	protected $twig;
 
 	public function __construct(){
 
 		$f3=\Base::instance();
-
-		$this->loader=new \Twig_Loader_Filesystem($f3->get('UI'));
-		$this->twig=new \Twig_Environment($this->loader, [
-			'cache'=>'tmp/cache',
-			'debug'=>$f3->get('TWIG_DEBUG')
-		]);
+		
+		$this->twig=new \Twig_Environment(
+			new \Twig_Loader_Filesystem($f3->get('UI')),
+			['cache'=>'tmp/cache', 'debug'=>$f3->get('TWIG_DEBUG')]
+		);
 
 		$this->twig->addFunction(new \Twig_Function('jsdelivr', function($cdn=NULL, $type='npm'){
 
@@ -55,6 +54,8 @@ class Twig  extends \Prefab{
 		$this->twig->addGlobal('input', \F3\Input::instance());
 
 		$this->twig->addGlobal('error', \F3\Input::instance()->error());
+
+		$this->twig->addGlobal('auth', \F3\DAuth::instance());
 
 	}
 

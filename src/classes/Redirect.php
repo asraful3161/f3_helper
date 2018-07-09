@@ -7,12 +7,10 @@ class Redirect extends \Prefab{
 
     protected $f3, $flash;
 
-    public function __construct($url=NULL){
+    public function __construct(){
 
     	$this->f3=\Base::instance();
         $this->flash=\F3\Flash::instance();
-
-        if($url) $this->f3->reroute(xSlash($url));
 
     }
 

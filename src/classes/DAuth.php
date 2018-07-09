@@ -9,9 +9,7 @@ class DAuth extends \Prefab{
 		$auth,
 		$userId,
 		$rememberDuration=30,
-		$verify,
-		$failCallback,
-		$successCallback;
+		$verified;
 
 	public function __construct(){
 
@@ -162,36 +160,32 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function user($role=NULL, $permission=NULL){
-		($this->auth->check())?$this->verify=TRUE:$this->verify=FALSE;
+	public function verify($role=NULL, $permission=NULL){
+		$this->verified=$this->auth->check();
 		return $this;
 	}
 
-	public function onFail($callback){
-		$this->failCallback=$callback;
-		return $this;
-	}
+	public function execute($ifSuccess=NULL, $ifFail=NULL){
 
-	public function onSuccess($callback){
-		$this->successCallback=$callback;
-		return $this;
-	}
+		if($this->verified){
 
-	public function execute(){
-
-		if($this->verify){
-
-			return call_user_func($this->successCallback);
+			if(is_callable($ifSuccess)) return call_user_func($ifSuccess);
+			return TRUE;
 
 		}else{
 
 			$url=\F3\Url::instance();
 			$url->intended($url->current());
 			
-			return call_user_func($this->failCallback);
+			if(is_callable($ifFail)) return call_user_func($ifFail);
+			return FALSE;
 
 		}
 
+	}
+
+	public function user(){
+		return $this->auth;
 	}
 
 	public function check(){
@@ -202,7 +196,7 @@ class DAuth extends \Prefab{
 
 	public function guest(){
 
-		return (!$this->auth->check())?TRUE:FALSE;
+		return $this->auth->check()?FALSE:TRUE;
 
 	}
 
