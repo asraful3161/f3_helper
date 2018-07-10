@@ -41,15 +41,17 @@ class DAuth extends \Prefab{
 		    	function($selector, $token) use($args){
 
 		        	// send `$selector` and `$token` to the user (e.g. via email)
+		        	$f3=\Base::instance();
+
 		        	$smtp=new \SMTP(
-		        		'smtp.mailtrap.io',
-		        		2525,
-		        		'PLAIN',
-		        		'9771ea9c359571',
-		        		'e7161257b39e93'
+		        		$f3->get('EMAIL_HOST'),
+		        		$f3->get('EMAIL_PORT'),
+		        		$f3->get('EMAIL_SCHEME'),
+		        		$f3->get('EMAIL_USER'),
+		        		$f3->get('EMAIL_PASS')
 		        	);
 
-					$smtp->set('From', 'asraful3161@gmail.com');
+					$smtp->set('From', $f3->get('EMAIL_FROM'));
 					$smtp->set('To', $args->email);
 					$smtp->set('Subject', 'Email verification link');
 					$smtp->send(url("auth/verify_email?selector={$selector}&token={$token}"));

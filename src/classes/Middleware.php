@@ -14,6 +14,7 @@ class Middleware extends \Prefab{
 	public function set($key, $action){
 
 		$this->f3->set("MIDDLEWARES.$key", $action);
+		return $this;
 
 	}
 

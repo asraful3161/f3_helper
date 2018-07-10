@@ -32,9 +32,9 @@ class Redirect extends \Prefab{
 
     }
 
-    public function with($value){
+    public function with($key, $value=NULL){
 
-        $this->flash->set($value);
+        $this->flash->set($key, $value);
         return $this;
 
     }

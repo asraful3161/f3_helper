@@ -189,11 +189,11 @@ function medoo(){
 
 function rv($msg=NULL, $status=FALSE, $data=NULL){ //full abbreviation return_value()
 
-	return [
+	return new \F3\Std([
 		'msg'=>$msg,
 		'status'=>$status,
 		'data'=>$data
-	];
+	]);
 
 }
 
