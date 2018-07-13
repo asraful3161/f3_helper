@@ -41,20 +41,12 @@ class DAuth extends \Prefab{
 		    	function($selector, $token) use($args){
 
 		        	// send `$selector` and `$token` to the user (e.g. via email)
-		        	$f3=\Base::instance();
 
-		        	$smtp=new \SMTP(
-		        		$f3->get('EMAIL_HOST'),
-		        		$f3->get('EMAIL_PORT'),
-		        		$f3->get('EMAIL_SCHEME'),
-		        		$f3->get('EMAIL_USER'),
-		        		$f3->get('EMAIL_PASS')
-		        	);
-
-					$smtp->set('From', $f3->get('EMAIL_FROM'));
-					$smtp->set('To', $args->email);
-					$smtp->set('Subject', 'Email verification link');
-					$smtp->send(url("auth/verify_email?selector={$selector}&token={$token}"));
+		        	email(new Std([
+		        		'to'=>$args->email,
+		        		'subject'=>'Email verification link',
+		        		'message'=>url("auth/verify_email?selector={$selector}&token={$token}")
+		        	]))->send();
 
 		    	}
 			);
@@ -145,6 +137,47 @@ class DAuth extends \Prefab{
 
 		    // email address already exists
 		    return rv('Sorry!, email address already exists');
+
+		}catch(\Delight\Auth\TooManyRequestsException $e){
+
+		    // too many requests
+		    return rv('Sorry!, too many requests');
+
+		}
+
+	}
+
+	public function forgetPassword(Std $args){
+
+		try{
+
+		    $this->auth->forgotPassword($args->email, function ($selector, $token) use($args){
+
+		        // send `$selector` and `$token` to the user (e.g. via email)
+		        email(new Std([
+		        	'to'=>$args->email,
+		        	'subject'=>'Password reset link.',
+		        	'message'=>url("auth/reset?selector={$selector}&token={$token}")
+		        ]))->send();
+
+		    });
+
+		    return rv('Success!, a password reset link send to your email inbox.', TRUE);
+
+		}catch(\Delight\Auth\InvalidEmailException $e){
+
+		    // invalid email address
+		    return rv('Sorry!, invalid email address');
+
+		}catch(\Delight\Auth\EmailNotVerifiedException $e){
+
+		    // email not verified
+		    return rv('Sorry!, email not verified');
+
+		}catch(\Delight\Auth\ResetDisabledException $e){
+
+		    // password reset is disabled
+		    return rv('Sorry!, password reset is disabled');
 
 		}catch(\Delight\Auth\TooManyRequestsException $e){
 

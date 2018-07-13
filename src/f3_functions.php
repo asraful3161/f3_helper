@@ -239,3 +239,14 @@ function middleware($key=NULL, $action=NULL){
 	return \F3\Middleware::instance();
 
 }
+
+function email($args=NULL){
+
+	if($args) return \F3\Mail::instance()->config($args);
+	return \F3\Mail::instance();
+
+}
+
+function std($args){
+	return new \F3\Std($args);
+}
