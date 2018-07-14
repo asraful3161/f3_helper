@@ -21,6 +21,17 @@ abstract class Controller extends \Prefab{
 		}
 
 	}
+
+	protected function view($data=[]){
+
+		$backtrace=debug_backtrace()[1];
+		$callerClass=strtolower(str_replace('Controller', '', $backtrace['class']));
+		$callerAction=$backtrace['function'];
+		$ext='html';
+
+		echo \F3\Twig::instance()->render("{$callerClass}/{$callerAction}.{$ext}", $data);
+
+	}
 	
 
 }

@@ -199,8 +199,8 @@ function rv($msg=NULL, $status=FALSE, $data=NULL){ //full abbreviation return_va
 
 function twig($file=NULL, $data=[]){
 
-	if($file) \F3\Twig::instance()->render($file, $data);
-	else return \F3\Twig::instance()->get();
+	if($file) echo \F3\Twig::instance()->render($file, $data);
+	else return \F3\Twig::instance();
 
 }
 
@@ -234,9 +234,9 @@ function input($key=NULL){
 
 function middleware($key=NULL, $action=NULL){
 
-	if($key && $action) return \F3\Middleware::instance()->set($key, $action);
-	elseif($key) return \F3\Middleware::instance()->get($key);
-	return \F3\Middleware::instance();
+	if($key && $action) return \Middlewares::instance()->set($key, $action);
+	elseif($key) return \Middlewares::instance()->get($key);
+	return \Middlewares::instance();
 
 }
 

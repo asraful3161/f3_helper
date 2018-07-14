@@ -1,13 +1,14 @@
 <?php
 namespace F3;
 
-class Middleware extends \Prefab{
+abstract class Middleware extends \Prefab{
 
 	protected $f3;
 
 	public function __construct(){
 
 		$this->f3=\Base::instance();
+		$this->registry();
 
 	}
 
@@ -23,5 +24,7 @@ class Middleware extends \Prefab{
 		if(is_callable($action)) return call_user_func_array($action, $args);
 		return FALSE;
 	}
+
+	abstract protected function registry();
 
 }

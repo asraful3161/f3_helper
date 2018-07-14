@@ -46,23 +46,16 @@ class Twig  extends \Prefab{
 		}));
 
 		$this->twig->addGlobal('f3', \Base::instance());
-
 		$this->twig->addGlobal('url', \F3\Url::instance());
-
 		$this->twig->addGlobal('flash', \F3\Flash::instance());
-
 		$this->twig->addGlobal('input', \F3\Input::instance());
-
 		$this->twig->addGlobal('error', \F3\Input::instance()->error());
-
 		$this->twig->addGlobal('auth', \F3\DAuth::instance());
 
 	}
 
 	public function render($file, $data=[]){
-
-		echo $this->twig->render($file, $data);
-
+		return $this->twig->render($file, $data);
 	}
 
 	public function get(){
