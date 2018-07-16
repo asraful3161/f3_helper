@@ -63,4 +63,10 @@ class Input extends \Prefab{
     	return NULL;
     }
 
+    public function args(){
+
+        return \Base::instance()->get('PARAMS.args');
+
+    }
+
 }
