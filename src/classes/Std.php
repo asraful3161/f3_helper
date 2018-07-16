@@ -27,4 +27,20 @@ class Std extends \Magic{
         unset($this->data[$key]);
     }
 
+    public function toCamelCaseArray($capitaliseFirstChar=TRUE){
+
+        $result=[];
+
+        foreach($this->data as $key=>$value){
+
+            $key=str_replace('_', '', ucwords($key, '_'));
+            if(!$capitaliseFirstChar) $key = lcfirst($key);
+            $result[$key]=$value; 
+
+        }
+
+        return $result;
+
+    }
+
 }
