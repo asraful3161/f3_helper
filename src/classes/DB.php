@@ -8,9 +8,16 @@ class DB extends \Prefab{
 	private $db, $medoo;
 	
 	public function __construct(){
+
 		$f3=\Base::instance();
-		if($f3->DB_DRIVER=='mysql') $this->db= new \DB\SQL("mysql:host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};dbname={$f3->get('DB_NAME')}", $f3->get('DB_USER'), $f3->get('DB_PASS'));
-		elseif($f3->DB_DRIVER=='sqlite') $this->db= new \DB\SQL("sqlite:{$f3->get('SQLITE_PATH')}");
+
+		if($f3->DB_DRIVER=='mysql'){
+
+			$this->db= new \DB\SQL("mysql:host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};dbname={$f3->get('DB_NAME')}", $f3->get('DB_USER'), $f3->get('DB_PASS'));
+
+		}elseif($f3->DB_DRIVER=='sqlite'){
+			$this->db= new \DB\SQL("sqlite:{$f3->get('SQLITE_PATH')}");
+		}
 
 		$this->medoo=new Medoo([
 
@@ -60,6 +67,17 @@ class DB extends \Prefab{
 
 	public function medoo(){
 		return $this->medoo;
+	}
+
+	public function exists($matrix, $v, $fullRowFlag=FALSE){
+
+		$matrix=explode('.', $matrix);
+		if(count($matrix)!=2) return NULL;
+		list($t, $f)=$matrix; //$t for table, $f for field
+		$result=$this->db->exec("SELECT * FROM `$t` WHERE `$f`='$v'");
+		if($fullRowFlag) return $result;
+		return $this->db->count();
+
 	}
 
 }

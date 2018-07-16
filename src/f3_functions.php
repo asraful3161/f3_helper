@@ -65,13 +65,8 @@ function timestamp($timestamps=null, $format='Y-m-d H:i:s'){
 	return date($format);
 }
 
-function matrix_exists($cell=null, $value=null, $full_rows=false){
-	$matrix=explode('.', $cell);
-	if(count($matrix)!=2) return null;
-	list($table, $field)=$matrix;
-	$result=db()->exec("SELECT * FROM `$table` WHERE `$field`='$value'");
-	if($full_rows) return $result;
-	return db()->count();
+function matrix_exists($cell=null, $v=null, $full_rows=false){
+	return \F3\DB::instance()->exists($cell, $v, $full_rows);
 }
 
 function matrix_uid($cell=null, $encrypt=false){
@@ -155,32 +150,8 @@ function jig_mapper($file){
 	return new \DB\Jig\Mapper(jig(), $file);
 }
 
-function cdn($url){
-	if(preg_match("/\.css$/", $url)) return "<link rel='stylesheet' type='text/css' href='{$url}'>";
-	elseif(preg_match("/\.js$/", $url)) return "<script src='{$url}'></script>";
-}
-
-function unpkg($pkg=NULL){
-	$url="https://unpkg.com";
-	if(is_string($pkg)) return cdn($url.'/'.$pkg);
-	elseif(is_array($pkg)){
-		$html='';
-		foreach($pkg as $row) $html.=cdn($url.'/'.$row);
-		return $html;
-	}
-}
-
-function jsdelivr($cdn=NULL, $type='npm'){
-	$url="https://cdn.jsdelivr.net";
-	if(is_string($cdn)) return cdn($url.'/'.$type.'/'.$cdn);
-	elseif(is_array($cdn)){
-		$url.="/combine/{$type}/".implode(",{$type}/", $cdn);
-		return cdn($url);
-	}
-}
-
 function fa($icon){
-	return "<i class='fa {$icon}' aria-hidden='true'></i>";
+	return \F3\Html::instance()->fa($icon);
 }
 
 function medoo(){

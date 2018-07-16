@@ -3,44 +3,66 @@ namespace F3;
 
 class Std extends \Magic{
 
+    //$k means key, $v means value, $d means data
+
     protected $data;
 
-    public function __construct($data=[]){
+    public function __construct($d=[]){
 
-    	$this->data=$data;
+    	$this->data=$d;
 
     }
 
-    function exists($key) {
-        return array_key_exists($key, $this->data);
+    function exists($k){
+        return array_key_exists($k, $this->data);
     } 
 
-    function set($key, $val) {
-        $this->data[$key]=$val;
+    function set($k, $v){
+        $this->data[$k]=$v;
     }
 
-    function &get($key){
-        return $this->data[$key];
+    function &get($k){
+        return $this->data[$k];
     }
 
-    function clear($key){
-        unset($this->data[$key]);
+    function clear($k){
+        unset($this->data[$k]);
     }
 
     public function toCamelCaseArray($capitaliseFirstChar=TRUE){
 
         $result=[];
 
-        foreach($this->data as $key=>$value){
+        foreach($this->data as $k=>$v){
 
-            $key=str_replace('_', '', ucwords($key, '_'));
-            if(!$capitaliseFirstChar) $key = lcfirst($key);
-            $result[$key]=$value; 
+            $k=str_replace('_', '', ucwords($k, '_'));
+            if(!$capitaliseFirstChar) $k = lcfirst($k);
+            $result[$k]=$v;
 
         }
 
         return $result;
 
+    }
+
+    public function kv($k, $v){
+
+        $result=[];
+
+        foreach($this->data as $row){
+            $result[$row[$k]]=$row[$v];
+        }
+
+        return $result;
+
+    }
+
+    public function chunk($v){
+        return array_chunk($this->data, $v);
+    }
+
+    public function sum(){
+        return array_sum($this->data);
     }
 
 }

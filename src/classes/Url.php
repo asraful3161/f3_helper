@@ -40,4 +40,34 @@ class Url extends \Prefab{
 
 	}
 
+	public function cdn($url){
+
+		if(preg_match("/\.css$/", $url)) return "<link rel='stylesheet' type='text/css' href='{$url}'>";
+		elseif(preg_match("/\.js$/", $url)) return "<script src='{$url}'></script>";
+
+	}
+
+	public function unpkg($pkg=NULL){
+
+		$url="https://unpkg.com";
+		if(is_string($pkg)) return $this->cdn($url.'/'.$pkg);
+		elseif(is_array($pkg)){
+			$html='';
+			foreach($pkg as $row) $html.=$this->cdn($url.'/'.$row);
+			return $html;
+		}
+
+	}
+
+	public function jsdelivr($cdn=NULL, $type='npm'){
+
+		$url="https://cdn.jsdelivr.net";
+		if(is_string($cdn)) return $this->cdn($url.'/'.$type.'/'.$cdn);
+		elseif(is_array($cdn)){
+			$url.="/combine/{$type}/".implode(",{$type}/", $cdn);
+			return $this->cdn($url);
+		}
+
+	}
+
 }
