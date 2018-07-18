@@ -205,9 +205,9 @@ function input($key=NULL){
 
 function middleware($key=NULL, $action=NULL){
 
-	if($key && $action) return \Middlewares::instance()->set($key, $action);
-	elseif($key) return \Middlewares::instance()->get($key);
-	return \Middlewares::instance();
+	if($key && $action) return \F3\Middleware::instance()->set($key, $action);
+	elseif($key) return \F3\Middleware::instance()->get($key);
+	return \F3\Middleware::instance();
 
 }
 
@@ -221,3 +221,8 @@ function email($args=NULL){
 function std($args){
 	return new \F3\Std($args);
 }
+
+function dd($args){
+	dump($args);
+	die;
+};

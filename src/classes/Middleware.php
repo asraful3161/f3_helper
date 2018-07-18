@@ -1,30 +1,27 @@
 <?php
 namespace F3;
 
-abstract class Middleware extends \Prefab{
+class Middleware extends \Prefab{
 
-	protected $f3;
+	protected $list;
 
 	public function __construct(){
 
-		$this->f3=\Base::instance();
-		$this->registry();
+		$this->list=new \F3\Std;
 
 	}
 
 	public function set($key, $action){
 
-		$this->f3->set("MIDDLEWARES.$key", $action);
+		$this->list->set($key, $action);
 		return $this;
 
 	}
 
 	public function get($key, $args=[]){
-		$action=$this->f3->get("MIDDLEWARES.$key");
+		$action=$this->list->get($key);
 		if(is_callable($action)) return call_user_func_array($action, $args);
 		return FALSE;
 	}
-
-	abstract protected function registry();
 
 }

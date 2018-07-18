@@ -80,4 +80,34 @@ class DB extends \Prefab{
 
 	}
 
+	public function runPropel(){
+
+		$f3=\Base::instance();
+
+		$container=\Propel\Runtime\Propel::getServiceContainer();
+		$container->checkVersion('2.0.0-dev');
+		$container->setAdapterClass('default', 'mysql');
+		$manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
+
+		$manager->setConfiguration([
+
+			'dsn' => "mysql:host={$f3->DB_HOST};port={$f3->DB_PORT};dbname={$f3->DB_NAME}",
+		 	'user' => $f3->DB_USER,
+		 	'password' => $f3->DB_PASS,
+			'settings' =>[
+		   	'charset' => 'utf8',
+		    'queries' =>[]
+		  ],
+
+		  'classname' => '\\Propel\\Runtime\\Connection\\ConnectionWrapper',
+		  'model_paths' =>[0 => 'src', 1 => 'vendor']
+
+		]);
+
+		$manager->setName('default');
+		$container->setConnectionManager('default', $manager);
+		$container->setDefaultDatasource('default');
+		
+	}
+
 }
