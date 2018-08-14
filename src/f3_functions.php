@@ -99,8 +99,8 @@ function validator($args){
 
 	\Valitron\Validator::addRule('exists', function($field, $value, array $params, array $fields){
 
-		if(matrix_exists($params[0].'.'.$field, $value)) return TRUE;
-		return FALSE;
+		if(strpos($params[0], '.')!==false) return matrix_exists($params[0], $value);
+		return matrix_exists($params[0].'.'.$field, $value);		
 
 	}, '{field} does not exists in records');
 

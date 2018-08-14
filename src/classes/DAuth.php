@@ -114,6 +114,49 @@ class DAuth extends \Prefab{
 
 	}
 
+	public function loginWithUsername(Std $args){
+
+		try {
+
+		    $this->auth->loginWithUsername(
+		    	$args->email,
+		    	$args->password,
+		    	$this->remember($args->remember)
+		    );
+
+		    // user is logged in
+		    $intendedUrl=\F3\Url::instance()->intended();
+		    if($intendedUrl) \F3\Redirect::instance()->toUrl($intendedUrl);
+
+		    return rv('User is logged in successfully!.', TRUE);
+
+		}catch(\Delight\Auth\InvalidPasswordException $e){
+
+		    // wrong password
+		    return rv('Sorry!, wrong password.');
+
+		}catch(\Delight\Auth\EmailNotVerifiedException $e){
+
+		    // email not verified
+		    return rv('Sorry!, email not verified.');
+
+		}catch(\Delight\Auth\TooManyRequestsException $e){
+
+		    // too many requests
+		    return rv('Sorry!, too many requests.');
+
+		}catch(\Delight\Auth\UnknownUsernameException $e){
+
+			return rv('Sorry!, inserted username does not exists.');
+
+		}catch(\Delight\Auth\AmbiguousUsernameException $e){
+
+			return rv('Sorry!, invalid username.');
+
+		}
+
+	}
+
 	public function confirmEmail(Std $args){
 
 		try{
@@ -142,6 +185,32 @@ class DAuth extends \Prefab{
 
 		    // too many requests
 		    return rv('Sorry!, too many requests');
+
+		}
+
+	}
+
+	public function resendConfirmationEmail($email){
+
+		try{
+
+		    $this->auth->resendConfirmationForEmail($email, function($selector, $token){
+
+	        	email(new Std([
+	        		'to'=>$email,
+	        		'subject'=>'Email verification link',
+	        		'message'=>url("auth/verify_email?selector={$selector}&token={$token}")
+	        	]))->send();
+	        	
+		    });
+
+		}catch(\Delight\Auth\ConfirmationRequestNotFound $e){
+
+			return rv('Sorry!, no earlier request found that could be re-sent.');
+
+		}catch(\Delight\Auth\TooManyRequestsException $e){
+
+			return rv('There have been too many requests, try again later.');
 
 		}
 
