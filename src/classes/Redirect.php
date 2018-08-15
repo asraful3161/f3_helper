@@ -26,6 +26,12 @@ class Redirect extends \Prefab{
 
     }
 
+    public function toRoute($route){
+
+        $this->f3->reroute($route);
+
+    }
+
     public function toBack(){
 
         $this->f3->reroute($this->f3->get('HEADERS.Referer'));
