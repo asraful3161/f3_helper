@@ -226,3 +226,7 @@ function dd($args){
 	dump($args);
 	die;
 };
+
+function bench(){
+	return \F3\Benchmark::instance();
+}
