@@ -8,11 +8,11 @@ class Twig  extends \Prefab{
 
 	public function __construct(){
 
-		$f3=\Base::instance();
+		$cfg=\Config::instance();
 		
 		$this->twig=new \Twig_Environment(
-			new \Twig_Loader_Filesystem($f3->get('UI')),
-			['cache'=>'tmp/cache', 'debug'=>$f3->get('TWIG_DEBUG')]
+			new \Twig_Loader_Filesystem($cfg->get('sys.ui')),
+			['cache'=>$cfg->get('twig.cache_path'), 'debug'=>$cfg->get('twig.debug')]
 		);
 
 		$this->twig->addFunction(new \Twig_Function('url', function($url=NULL){

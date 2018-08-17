@@ -9,31 +9,31 @@ class DB extends \Prefab{
 	
 	public function __construct(){
 
-		$f3=\Base::instance();
+		$cfg=\Config::instance();
 
-		if($f3->DB_DRIVER=='mysql'){
+		if($cfg->get('db.driver')=='mysql'){
 
-			$this->db= new \DB\SQL("mysql:host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};dbname={$f3->get('DB_NAME')}", $f3->get('DB_USER'), $f3->get('DB_PASS'));
+			$this->db= new \DB\SQL("mysql:host={$cfg->get('db.host')};port={$cfg->get('db.port')};dbname={$cfg->get('db.name')}", $cfg->get('db.user'), $cfg->get('db.password'));
 
-		}elseif($f3->DB_DRIVER=='sqlite'){
-			$this->db= new \DB\SQL("sqlite:{$f3->get('SQLITE_PATH')}");
+		}elseif($cfg->get('db.driver')=='sqlite'){
+			$this->db= new \DB\SQL("sqlite:{$cfg->get('db.sqlite_path')}");
 		}
 
 		$this->medoo=new Medoo([
 
 			// required
-			'database_type'=>$f3->get('DB_DRIVER'),
-			'database_name'=>$f3->get('DB_NAME'),
-			'server'=>$f3->get('DB_HOST'),
-			'username'=>$f3->get('DB_USER'),
-			'password'=>$f3->get('DB_PASS'),
+			'database_type'=>$cfg->get('db.driver'),
+			'database_name'=>$cfg->get('db.name'),
+			'server'=>$cfg->get('db.host'),
+			'username'=>$cfg->get('db.user'),
+			'password'=>$cfg->get('db.password'),
 		 
 			// [optional]
 			'charset' => 'utf8',
-			'port' => $f3->get('DB_PORT'),
+			'port' => $cfg->get('db.port'),
 		 
 			// [optional] Table prefix
-			'prefix' => $f3->get('DB_TABLE_PREFIX'),
+			'prefix' => $cfg->get('db.table_prefix'),
 		 
 			// [optional] Enable logging (Logging is disabled by default for better performance)
 			//'logging' => true,
@@ -82,7 +82,7 @@ class DB extends \Prefab{
 
 	public function runPropel(){
 
-		$f3=\Base::instance();
+		$cfg=\Config::instance();
 
 		$container=\Propel\Runtime\Propel::getServiceContainer();
 		$container->checkVersion('2.0.0-dev');
@@ -91,13 +91,13 @@ class DB extends \Prefab{
 
 		$manager->setConfiguration([
 
-			'dsn' => "mysql:host={$f3->DB_HOST};port={$f3->DB_PORT};dbname={$f3->DB_NAME}",
-		 	'user' => $f3->DB_USER,
-		 	'password' => $f3->DB_PASS,
+			'dsn' => "mysql:host={$cfg->get('db.host')};port={$cfg->get('db.port')};dbname={$cfg->get('db.name')}",
+		 	'user' => $cfg->get('db.user'),
+		 	'password' => $cfg->get('db.password'),
 			'settings' =>[
-		   	'charset' => 'utf8',
-		    'queries' =>[]
-		  ],
+		   		'charset' => 'utf8',
+		    	'queries' =>[]
+		  	],
 
 		  'classname' => '\\Propel\\Runtime\\Connection\\ConnectionWrapper',
 		  'model_paths' =>[0 => 'src', 1 => 'vendor']

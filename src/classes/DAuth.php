@@ -13,12 +13,12 @@ class DAuth extends \Prefab{
 
 	public function __construct(){
 
-		$f3=\Base::instance();
+		$cfg=\Config::instance();
 
 		$this->auth=new Auth(new \PDO(
-			"mysql:dbname={$f3->get('DB_NAME')};host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};charset=utf8mb4",
-			$f3->get('DB_USER'),
-			$f3->get('DB_PASS')
+			"mysql:dbname={$cfg->get('db.name')};host={$cfg->get('db.host')};port={$cfg->get('db.port')};charset=utf8mb4",
+			$cfg->get('db.user'),
+			$cfg->get('db.password')
 		));
 
 	}

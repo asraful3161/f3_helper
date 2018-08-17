@@ -225,4 +225,13 @@ function std($args){
 function dd($args){
 	dump($args);
 	die;
-};
+}
+
+function bench(){
+	return \F3\Benchmark::instance();
+}
+
+function config($key=NULL){
+	if($key) return \Config::instance()->get($key);
+	return \Config::instance();
+}
