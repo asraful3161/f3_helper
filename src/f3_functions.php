@@ -232,6 +232,6 @@ function bench(){
 }
 
 function config($key=NULL){
-	if($key) return \Config::instance()->get($key);
+	if($key)return \Base::instance()->get('CONFIGS.{$key}');
 	return \Config::instance();
 }

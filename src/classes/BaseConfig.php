@@ -3,12 +3,12 @@ namespace F3;
 
 abstract class BaseConfig extends \Prefab{
 
-	protected $config, $env;
+	protected $env;
 
 	public function __construct(){
 
 		$this->env=parse_ini_file('app/config/env.ini');
-		$this->config=$this->register();
+		\Base::instance()->set('CONFIGS', $this->register());
 
 	}
 
@@ -26,7 +26,14 @@ abstract class BaseConfig extends \Prefab{
 		return isset($this->env[$key])?$this->env[$key]:$default;
 
 	}
-	
+
+	public function get($key){
+
+		return \Base::instance()->get("CONFIGS.{$key}");
+
+	}
+
+/*	
 	public function get($keys){
 
 		$keys=explode('.', $keys);
@@ -45,8 +52,7 @@ abstract class BaseConfig extends \Prefab{
 		return $result;
 
 	}
-	
-/*
+
 	public function get($keys){
 
 		$impoExpo=implode("']['", explode('.', $keys));
@@ -54,7 +60,7 @@ abstract class BaseConfig extends \Prefab{
 		return $result?$result:NULL;
 
 	}
-*/
+
 
 	public function fGet($func, $keys){
 
@@ -77,5 +83,7 @@ abstract class BaseConfig extends \Prefab{
 		} return NULL;
 
 	}
+
+*/
 
 }
