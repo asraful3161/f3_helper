@@ -1,6 +1,7 @@
 <?php
 namespace F3;
 use \Delight\Auth\Auth;
+use \Delight\Auth\Role;
 use \F3\Std;
 
 class DAuth extends \Prefab{
@@ -265,8 +266,18 @@ class DAuth extends \Prefab{
 	}
 
 	public function verify($role=NULL, $permission=NULL){
-		$this->verified=$this->auth->check();
+
+		if($role && $this->auth->check()){
+
+			$this->verified=$this->auth->hasRole($this->roleV($role));
+
+		}else $this->verified=$this->auth->check();
+
 		return $this;
+	}
+
+	public function roleV($role){
+		return array_search($role, Role::getMap());
 	}
 
 	public function execute($ifSuccess=NULL, $ifFail=NULL){
@@ -292,10 +303,11 @@ class DAuth extends \Prefab{
 		return $this->auth;
 	}
 
-	public function check(){
+	public function check($role=NULL){
 
+		if($role && $this->auth->check()) return $this->auth->hasRole($this->roleV($role));
 		return $this->auth->check();
-
+		
 	}
 
 	public function guest(){
