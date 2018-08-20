@@ -5,18 +5,22 @@ use Medoo\Medoo;
 
 class DB extends \Prefab{
 
-	private $db, $medoo;
+	private $db, $medoo, $dsn;
 	
 	public function __construct(){
 
 		$f3=\Base::instance();
 
-		if($f3->DB_DRIVER=='mysql'){
+		if($f3->get('DB_DRIVER')=='mysql'){
 
-			$this->db= new \DB\SQL("mysql:host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};dbname={$f3->get('DB_NAME')}", $f3->get('DB_USER'), $f3->get('DB_PASS'));
+			$this->dsn="mysql:host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};dbname={$f3->get('DB_NAME')}";
+			$this->db=new \DB\SQL($this->dsn, $f3->get('DB_USER'), $f3->get('DB_PASS'));
 
-		}elseif($f3->DB_DRIVER=='sqlite'){
-			$this->db= new \DB\SQL("sqlite:{$f3->get('SQLITE_PATH')}");
+		}elseif($f3->get('DB_DRIVER')=='sqlite'){
+
+			$this->dsn="sqlite:{$f3->get('SQLITE_PATH')}";
+			$this->db=new \DB\SQL($this->dsn);
+
 		}
 
 		$this->medoo=new Medoo([
@@ -91,7 +95,7 @@ class DB extends \Prefab{
 
 		$manager->setConfiguration([
 
-			'dsn' => "mysql:host={$f3->DB_HOST};port={$f3->DB_PORT};dbname={$f3->DB_NAME}",
+			'dsn' => $this->dsn,
 		 	'user' => $f3->DB_USER,
 		 	'password' => $f3->DB_PASS,
 			'settings' =>[

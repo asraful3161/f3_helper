@@ -15,12 +15,7 @@ class DAuth extends \Prefab{
 	public function __construct(){
 
 		$f3=\Base::instance();
-
-		$this->auth=new Auth(new \PDO(
-			"mysql:dbname={$f3->get('DB_NAME')};host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};charset=utf8mb4",
-			$f3->get('DB_USER'),
-			$f3->get('DB_PASS')
-		));
+		$this->auth=new Auth(\F3\DB::instance()->get()->pdo());
 
 	}
 
@@ -258,6 +253,20 @@ class DAuth extends \Prefab{
 
 	}
 
+	public function user(){
+		return $this->auth;
+	}
+
+	public function id(){
+		return $this->auth->getUserId();
+	}
+
+	public function guest(){
+
+		return $this->auth->check()?FALSE:TRUE;
+
+	}
+
 	public function logOut(){
 
 		$this->auth->logOut();
@@ -265,19 +274,31 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function verify($role=NULL, $permission=NULL){
-
-		if($role && $this->auth->check()){
-
-			$this->verified=$this->auth->hasRole($this->roleV($role));
-
-		}else $this->verified=$this->auth->check();
-
-		return $this;
+	public function roleV($roles){
+		$roleMap=Role::getMap();
+		if(is_string($roles)) return array_search($roles, $roleMap);
+		elseif(is_array($roles)){
+			$roleV=[];
+			foreach($roles as $role){
+				if($value=array_search($role, $roleMap)) array_push($roleV, $value);
+			}
+			return $roleV;
+		}
 	}
 
-	public function roleV($role){
-		return array_search($role, Role::getMap());
+	public function check($role=NULL){
+
+		if($role && $this->auth->check()) return $this->auth->hasRole($this->roleV($role));
+		return $this->auth->check();
+		
+	}
+
+	public function verify(){
+
+		$this->verified=FALSE;
+		$this->verified=$this->auth->check();
+		return $this;
+
 	}
 
 	public function execute($ifSuccess=NULL, $ifFail=NULL){
@@ -299,20 +320,27 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function user(){
-		return $this->auth;
+	public function hasRole($role){
+
+		if($this->auth->hasRole($this->roleV($role))) $this->verified=TRUE;
+		else $this->verified=FALSE;
+		return $this;
+
 	}
 
-	public function check($role=NULL){
+	public function hasAnyRole($roles){
 
-		if($role && $this->auth->check()) return $this->auth->hasRole($this->roleV($role));
-		return $this->auth->check();
-		
+		if(call_user_func_array([$this->auth, "hasAnyRole"], $this->roleV($roles))) $this->verified=TRUE;
+		else $this->verified=FALSE;
+		return $this;
+
 	}
 
-	public function guest(){
+	public function hasRoles($roles){
 
-		return $this->auth->check()?FALSE:TRUE;
+		if(call_user_func_array([$this->auth, "hasAllRoles"], $this->roleV($roles))) $this->verified=TRUE;
+		else $this->verified=FALSE;
+		return $this;
 
 	}
 
