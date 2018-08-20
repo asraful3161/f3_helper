@@ -230,3 +230,38 @@ function dd($args){
 function bench(){
 	return \F3\Benchmark::instance();
 }
+
+function controller(){	
+	return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', \Base::instance()->get('PARAMS.Controller')))).'Controller';
+}
+
+function action($prefix=''){
+	return $prefix.strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
+}
+
+function dynamicRoute($prefix=''){
+
+	$f3=\Base::instance();
+
+	$controller=$f3->get('PARAMS.Controller');
+	$action=$f3->get('PARAMS.Action');
+
+	$class=str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $controller))).'Controller';
+
+	if(!class_exists($class)) return $f3->error(404);
+
+	if($action){
+
+		$method=$prefix.strtolower(str_replace('-', '_', $action));
+		if(method_exists($class::instance(), $method)) return $class::instance()->$method();
+		return $f3->error(404);
+
+	}else{
+
+		$method=$prefix.'index';
+		if(method_exists($class::instance(), $method)) return $class::instance()->$method();
+		return $f3->error(404);
+
+	}
+
+}
