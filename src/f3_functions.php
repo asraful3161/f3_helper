@@ -231,12 +231,18 @@ function bench(){
 	return \F3\Benchmark::instance();
 }
 
-function controller(){	
-	return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', \Base::instance()->get('PARAMS.Controller')))).'Controller';
+function controller(){
+	return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', f3('PARAMS.Controller')))).'Controller';
 }
 
-function action($prefix=''){
-	return $prefix.strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
+function action(){
+
+	$action=strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
+	$method=f3('VERB')=='GET'?'':strtolower(\Base::instance()->get('VERB')).'_';
+
+	if($action) return $method.$action;
+	return $method.'index';
+
 }
 
 function dynamicRoute($prefix=''){
@@ -264,4 +270,8 @@ function dynamicRoute($prefix=''){
 
 	}
 
+}
+
+function setIntend(){
+	\F3\Url::instance()->intended(\F3\Url::instance()->current());
 }
