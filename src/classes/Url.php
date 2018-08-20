@@ -70,4 +70,17 @@ class Url extends \Prefab{
 
 	}
 
+	public function active($url){
+		if(is_string($url) && \Base::instance()->get('PATH')=='/'.ltrim($url, '/')) return 'active';
+		elseif(is_array($url)){
+
+			$path=\Base::instance()->get('PATH');
+
+			foreach($url as $row){
+				if($path=='/'.ltrim($row, '/')) return 'active';
+			}
+
+		} return '';
+	}
+
 }
