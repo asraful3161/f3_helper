@@ -24,17 +24,20 @@ abstract class Controller extends \Prefab{
 
 	protected function middleware($name, $args=[]){
 
-		if($args){
+		$middleware=\F3\Middleware::instance();
+		$params=isset($args['params'])?$args['params']:[];
 
-			if(isset($args['only'])){
-				if(in_array(action(), $args['only'])) middleware()->get($name);
-			}
 
-			if(isset($args['except'])){
-				if(!in_array(action(), $args['except'])) middleware()->get($name);
-			}
+		if(isset($args['only'])){
 
-		}else middleware()->get($name);
+			if(in_array(action(), $args['only'])) $middleware->get($name, $params);
+
+		}elseif(isset($args['except'])){
+
+			if(!in_array(action(), $args['except'])) $middleware->get($name, $params);
+
+		}else $middleware->get($name, $params);
+				
 
 	}	
 

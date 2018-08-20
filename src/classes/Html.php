@@ -7,4 +7,8 @@ class Html extends \Prefab{
 		return "<i class='fa {$icon}' aria-hidden='true'></i>";
 	}
 
+	public function csrf_field(){
+		return "<input type='hidden' name='csrf_token' value=''>";
+	}
+
 }

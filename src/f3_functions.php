@@ -203,10 +203,9 @@ function input($key=NULL){
 
 }
 
-function middleware($key=NULL, $action=NULL){
+function middleware($key=NULL, $params=[]){
 
-	if($key && $action) return \F3\Middleware::instance()->set($key, $action);
-	elseif($key) return \F3\Middleware::instance()->get($key);
+	if($key) return \F3\Middleware::instance()->get($key, $params);
 	return \F3\Middleware::instance();
 
 }
@@ -238,19 +237,20 @@ function controller(){
 function action(){
 
 	$action=strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
-	$method=f3('VERB')=='GET'?'':strtolower(\Base::instance()->get('VERB')).'_';
+	$prefix=\Base::instance()->get('VERB')=='GET'?'':strtolower(\Base::instance()->get('VERB')).'_';
 
-	if($action) return $method.$action;
-	return $method.'index';
+	if($action) return $prefix.$action;
+	return $prefix.'index';
 
 }
 
-function dynamicRoute($prefix=''){
+function dynamicRoute(){
 
 	$f3=\Base::instance();
 
 	$controller=$f3->get('PARAMS.Controller');
 	$action=$f3->get('PARAMS.Action');
+	$prefix=$f3->get('VERB')=='GET'?'':strtolower($f3->get('VERB')).'_';
 
 	$class=str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $controller))).'Controller';
 
