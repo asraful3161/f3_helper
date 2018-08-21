@@ -8,7 +8,12 @@ class Html extends \Prefab{
 	}
 
 	public function csrf_field(){
-		return "<input type='hidden' name='csrf_token' value=''>";
+		
+		$f3=\Base::instance();
+		new \Session(NULL,'CSRF');
+		$f3->copy('CSRF','SESSION.csrf');
+		return "<input type='hidden' name='csrf_token' value='{$f3->CSRF}'/>";
+
 	}
 
 }

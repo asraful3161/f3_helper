@@ -83,4 +83,11 @@ class Url extends \Prefab{
 		} return '';
 	}
 
+	public function isApi(){
+
+		if(strrpos(\Base::instance()->get('PATH'), 'api')===1) return TRUE;
+		return FALSE;
+
+	}
+
 }
