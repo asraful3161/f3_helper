@@ -34,6 +34,7 @@ class Twig  extends \Prefab{
 		$this->twig->addGlobal('error', \F3\Input::instance()->error());
 		$this->twig->addGlobal('auth', \F3\DAuth::instance());
 		$this->twig->addGlobal('html', \F3\Html::instance());
+		$this->twig->addGlobal('form', \F3\Form::instance());
 
 	}
 

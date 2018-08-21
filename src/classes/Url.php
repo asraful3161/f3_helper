@@ -71,10 +71,10 @@ class Url extends \Prefab{
 	}
 
 	public function active($url){
-		if(is_string($url) && \Base::instance()->get('PATH')=='/'.ltrim($url, '/')) return 'active';
+		if(is_string($url) && $this->f3->PATH=='/'.ltrim($url, '/')) return 'active';
 		elseif(is_array($url)){
 
-			$path=\Base::instance()->get('PATH');
+			$path=$this->f3->PATH;
 
 			foreach($url as $row){
 				if($path=='/'.ltrim($row, '/')) return 'active';
@@ -85,9 +85,13 @@ class Url extends \Prefab{
 
 	public function isApi(){
 
-		if(strrpos(\Base::instance()->get('PATH'), 'api')===1) return TRUE;
+		if(strrpos($this->f3->PATH, 'api')===1) return TRUE;
 		return FALSE;
 
+	}
+
+	public function path(){
+		return $this->f3->PATH;
 	}
 
 }
