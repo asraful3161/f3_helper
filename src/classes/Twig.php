@@ -12,7 +12,7 @@ class Twig  extends \Prefab{
 		
 		$this->twig=new \Twig_Environment(
 			new \Twig_Loader_Filesystem($f3->get('UI')),
-			['cache'=>'tmp/cache', 'debug'=>$f3->get('TWIG_DEBUG')]
+			['cache'=>'tmp/cache', 'debug'=>$f3->TWIG_DEBUG]
 		);
 
 		$this->twig->addFunction(new \Twig_Function('url', function($url=NULL){
@@ -35,6 +35,7 @@ class Twig  extends \Prefab{
 		$this->twig->addGlobal('auth', \F3\DAuth::instance());
 		$this->twig->addGlobal('html', \F3\Html::instance());
 		$this->twig->addGlobal('form', \F3\Form::instance());
+		$this->twig->addGlobal('bs4', \F3\BS4::instance());
 
 	}
 

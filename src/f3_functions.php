@@ -196,9 +196,9 @@ function xSlash($string){
 	return '/'.ltrim($string, '/');
 }
 
-function input($key=NULL){
+function input($key=NULL, $default=NULL){
 
-	if($key) return \F3\Input::instance()->get($key);
+	if($key) return \F3\Input::instance()->get($key, $default);
 	return \F3\Input::instance();
 
 }
@@ -250,9 +250,10 @@ function dynamicRoute(){
 
 	$controller=$f3->get('PARAMS.Controller');
 	$action=$f3->get('PARAMS.Action');
-	$prefix=$f3->get('VERB')=='GET'?'':strtolower($f3->get('VERB')).'_';
+	$prefix=$f3->VERB=='GET'?'':strtolower($f3->VERB).'_';
 
-	$class=str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $controller))).'Controller';
+	//$class=str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $controller))).'Controller';
+	$class=str_replace(['_', '-'], '', ucwords($controller, '_-')).'Controller';
 
 	if(!class_exists($class)) return $f3->error(404);
 
@@ -274,4 +275,12 @@ function dynamicRoute(){
 
 function setIntend(){
 	\F3\Url::instance()->intended(\F3\Url::instance()->current());
+}
+
+function orm($model){
+	return \F3\Orm::instance()->get($model);
+}
+
+function str($data){
+	return \F3\StrOps::instance()->get($data);
 }

@@ -11,12 +11,12 @@ class DB extends \Prefab{
 
 		$f3=\Base::instance();
 
-		if($f3->get('DB_DRIVER')=='mysql'){
+		if($f3->DB_DRIVER=='mysql'){
 
-			$this->dsn="mysql:host={$f3->get('DB_HOST')};port={$f3->get('DB_PORT')};dbname={$f3->get('DB_NAME')}";
-			$this->db=new \DB\SQL($this->dsn, $f3->get('DB_USER'), $f3->get('DB_PASS'));
+			$this->dsn="mysql:host={$f3->DB_HOST};port={$f3->DB_PORT};dbname={$f3->DB_NAME}";
+			$this->db=new \DB\SQL($this->dsn, $f3->DB_USER, $f3->DB_PASS);
 
-		}elseif($f3->get('DB_DRIVER')=='sqlite'){
+		}elseif($f3->DB_DRIVER=='sqlite'){
 
 			$this->dsn="sqlite:{$f3->get('SQLITE_PATH')}";
 			$this->db=new \DB\SQL($this->dsn);
@@ -26,18 +26,18 @@ class DB extends \Prefab{
 		$this->medoo=new Medoo([
 
 			// required
-			'database_type'=>$f3->get('DB_DRIVER'),
-			'database_name'=>$f3->get('DB_NAME'),
-			'server'=>$f3->get('DB_HOST'),
-			'username'=>$f3->get('DB_USER'),
-			'password'=>$f3->get('DB_PASS'),
+			'database_type'=>$f3->DB_DRIVER,
+			'database_name'=>$f3->DB_NAME,
+			'server'=>$f3->DB_HOST,
+			'username'=>$f3->DB_USER,
+			'password'=>$f3->DB_PASS,
 		 
 			// [optional]
 			'charset' => 'utf8',
-			'port' => $f3->get('DB_PORT'),
+			'port' => $f3->DB_PORT,
 		 
 			// [optional] Table prefix
-			'prefix' => $f3->get('DB_TABLE_PREFIX'),
+			'prefix' => $f3->DB_TABLE_PREFIX,
 		 
 			// [optional] Enable logging (Logging is disabled by default for better performance)
 			//'logging' => true,

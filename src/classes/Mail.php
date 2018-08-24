@@ -12,11 +12,11 @@ class Mail extends \Prefab{
 		$f3=\Base::instance();
 
 		$this->smtp=new \SMTP(
-		    $f3->get('EMAIL_HOST'),
-		    $f3->get('EMAIL_PORT'),
-		    $f3->get('EMAIL_SCHEME'),
-		    $f3->get('EMAIL_USER'),
-		    $f3->get('EMAIL_PASS')
+		    $f3->EMAIL_HOST,
+		    $f3->EMAIL_PORT,
+		    $f3->EMAIL_SCHEME,
+		    $f3->EMAIL_USER,
+		    $f3->EMAIL_PASS
 		);
 
 	}
@@ -34,7 +34,7 @@ class Mail extends \Prefab{
 	public function config(Std $args){
 
 		if(empty($args->from)){
-			$this->smtp->set('From', \Base::instance()->get('EMAIL_FROM'));
+			$this->smtp->set('From', \Base::instance()->EMAIL_FROM);
 		}else{
 			$this->smtp->set('From', $args->from);
 		}

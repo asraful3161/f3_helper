@@ -11,6 +11,10 @@ class Input extends \Prefab{
 
 	}
 
+    public function all(){
+        return $this->data;
+    }
+
 	public function only($keys=[]){
 
 		$rv=[];
@@ -26,7 +30,7 @@ class Input extends \Prefab{
 
 	}
 
-    public function exists($key) {
+    public function exists($key){
 
         if($this->errorFlag) return \F3\Flash::instance()->exists("errors.$key");
         return array_key_exists($key, $this->data);
@@ -37,9 +41,9 @@ class Input extends \Prefab{
         $this->data[$key] = $val;
     }
 
-    public function get($key=NULL){
-        if($key) return $this->data[$key];
-        return $this->data;
+    public function get($key, $default=NULL){
+        if(empty($this->data[$key])) return $default;
+        return $this->data[$key];
     }
 
     public function clear($key) {
@@ -66,6 +70,27 @@ class Input extends \Prefab{
     public function args(){
 
         return \Base::instance()->get('PARAMS.args');
+
+    }
+
+    public function forModel(array $keys=[]){
+
+        $rv=[];
+        $str=\F3\StrOps::instance();
+
+        if($keys){
+            foreach($keys as $key){
+                $camelKey=$str->get($key)->toCamel();
+                $rv[$camelKey]=isset($this->data[$key])?$this->data[$key]:NULL;          
+            }
+        }else{
+            foreach($this->data as $key=>$value){
+                $camelKey=$str->get($key)->toCamel();
+                $rv[$camelKey]=$value;
+            }
+        }
+        
+        return $rv;
 
     }
 

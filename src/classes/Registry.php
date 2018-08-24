@@ -1,7 +1,7 @@
 <?php
 namespace F3;
 
-abstract class BaseRegistry extends \Prefab{
+abstract class Registry extends \Prefab{
 
 	public function __construct(){
 		

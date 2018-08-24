@@ -2,6 +2,7 @@
 namespace F3;
 
 use \F3\Flash;
+use \F3\Url;
 
 class Redirect extends \Prefab{
 
@@ -16,7 +17,7 @@ class Redirect extends \Prefab{
 
     public function to($url){
 
-        $this->f3->reroute(xSlash($url));
+        $this->f3->reroute(Url::instance()->to($url));
 
     }
 

@@ -7,7 +7,7 @@ abstract class Controller extends \Prefab{
 
 	public function index(){
 
-		\Base::instance()->reroute($this->index);
+		\F3\Redirect::instance()->to($this->index);
 
 	}
 
@@ -39,6 +39,18 @@ abstract class Controller extends \Prefab{
 		}else $middleware->get($name, $params);
 				
 
-	}	
+	}
+
+	protected function validate(array $rules){
+
+		$v=validator(\F3\Input::instance()->all());
+
+		$v->rules($rules);
+
+		if(!$v->validate()){
+			\F3\Redirect::instance()->with('validation_alert', ['danger'=>'Validation failed.'])->withInput($v->errors())->toBack();
+		}
+
+	}
 
 }
