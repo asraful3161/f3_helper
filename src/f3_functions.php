@@ -217,8 +217,8 @@ function middleware($name, $args=NULL){
 	$class="\\Middleware\\".str_replace(['_', '-'], '', ucwords($name, '_-'));
 
 	if(class_exists($class)){
-		if($args) return $class::instance($args);
-		return $class::instance();
+		if($args) return $class::instance()->run($args);
+		return $class::instance()->run();
 	}
 
 	\Base::instance()->error(404);
@@ -251,11 +251,18 @@ function controller(){
 
 function action(){
 
-	$action=strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
-	$prefix=\Base::instance()->get('VERB')=='GET'?'':strtolower(\Base::instance()->get('VERB')).'_';
+	$f3=\Base::instance();
 
-	if($action) return $prefix.$action;
-	return $prefix.'index';
+	if(\F3\Url::instance()->isDir()){
+
+		$action=strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
+		$prefix=\Base::instance()->get('VERB')=='GET'?'':strtolower(\Base::instance()->get('VERB')).'_';
+		if($action) return $prefix.$action;
+		return $prefix.'index';
+
+	}
+
+	return explode('->', $f3->get('ROUTES.'.$f3->PATTERN.'.0.'.$f3->VERB.'.0'))[1];
 
 }
 
@@ -275,14 +282,16 @@ function dynamicRoute(){
 	if($action){
 
 		$method=$prefix.strtolower(str_replace('-', '_', $action));
-		if(method_exists($class::instance(), $method)) return $class::instance()->$method();
-		return $f3->error(404);
+		if(method_exists($class::instance(), $method)){
+			return $class::instance()->$method();
+		}return $f3->error(404);
 
 	}else{
 
 		$method=$prefix.'index';
-		if(method_exists($class::instance(), $method)) return $class::instance()->$method();
-		return $f3->error(404);
+		if(method_exists($class::instance(), $method)){
+			return $class::instance()->$method();
+		}return $f3->error(404);
 
 	}
 

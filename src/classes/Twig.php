@@ -36,6 +36,7 @@ class Twig  extends \Prefab{
 		$this->twig->addGlobal('html', \F3\Html::instance());
 		$this->twig->addGlobal('form', \F3\Form::instance());
 		$this->twig->addGlobal('bs4', \F3\BS4::instance());
+		$this->twig->addGlobal('vg', \ViewGlobal::instance());
 
 	}
 

@@ -84,10 +84,11 @@ class Url extends \Prefab{
 	}
 
 	public function isApi(){
+		return strrpos($this->f3->PATH, 'api')===1;
+	}
 
-		if(strrpos($this->f3->PATH, 'api')===1) return TRUE;
-		return FALSE;
-
+	public function isDir(){
+		return strrpos($this->f3->PATH, 'web')===1;
 	}
 
 	public function path(){
