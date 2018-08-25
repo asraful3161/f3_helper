@@ -203,10 +203,25 @@ function input($key=NULL, $default=NULL){
 
 }
 
-function middleware($key=NULL, $params=[]){
+/*
+function middleware($key=NULL, $args=[]){
 
-	if($key) return \F3\Middleware::instance()->get($key, $params);
+	if($key) return \F3\Middleware::instance()->get($key, $args);
 	return \F3\Middleware::instance();
+
+}
+*/
+
+function middleware($name, $args=NULL){
+
+	$class="\\Middleware\\".str_replace(['_', '-'], '', ucwords($name, '_-'));
+
+	if(class_exists($class)){
+		if($args) return $class::instance($args);
+		return $class::instance();
+	}
+
+	\Base::instance()->error(404);
 
 }
 
