@@ -274,6 +274,7 @@ class DAuth extends \Prefab{
 
 	}
 
+	/*
 	public function roleV($roles){
 		$roleMap=Role::getMap();
 		if(is_string($roles)) return array_search($roles, $roleMap);
@@ -285,6 +286,7 @@ class DAuth extends \Prefab{
 			return $roleV;
 		}
 	}
+	*/
 
 	public function check($role=NULL){
 
@@ -293,7 +295,7 @@ class DAuth extends \Prefab{
 		
 	}
 
-	/*
+	
 	public function verify(){
 
 		$this->verified=FALSE;
@@ -301,7 +303,24 @@ class DAuth extends \Prefab{
 		return $this;
 
 	}
-	*/
+
+	public function byRole($name){
+		$this->verified=FALSE;
+		if($this->hasRole($name)) $this->verified=TRUE;
+		return $this;
+	}
+
+	public function byPermit($names){
+		$this->verified=FALSE;
+		if($this->hasPermit($names)) $this->verified=TRUE;
+		return $this;
+	}
+
+	public function byAnyPermit($names){
+		$this->verified=FALSE;
+		if($this->hasAnyPermit($names)) $this->verified=TRUE;
+		return $this;
+	}
 
 	public function execute($ifSuccess=NULL, $ifFail=NULL){
 
@@ -324,12 +343,48 @@ class DAuth extends \Prefab{
 
 	public function hasRole($name){
 
-		return (bool) \Orm\UsersQuery::create()
-			->useRoleQuery()
-			->filterByName($name)
-			->endUse()
-			->findPK($this->auth->getUserId());
+		$userId=$this->auth->getUserId();
 
+		$result=db()->exec("
+			SELECT `users`.`id`
+			FROM `users`, `role`
+			WHERE `users`.`role_id`=`role`.`id`
+			AND `users`.`id`='{$userId}'
+			AND `role`.`name`='{$name}'
+			LIMIT 1");
+
+		if(isset($result[0]['id']) && $result[0]['id']==$userId) return TRUE;
+		return FALSE;
+
+	}
+
+	protected function checkPermits(array $names){
+
+		$userId=$this->auth->getUserId();
+		$in="'".implode("', '", $names)."'";
+
+		$result=db()->exec("
+			SELECT `permit`.`name`
+			FROM `users`, `role`, `permit`, `permit_role`
+			WHERE `users`.`id`='{$userId}'
+			AND `users`.`role_id`=`role`.`id`
+			AND `role`.`id`=`permit_role`.`role_id`
+			AND `permit`.`id`=`permit_role`.`permit_id`
+			AND `permit`.`name`
+			IN({$in})");
+
+		return count($result);
+
+	}
+
+	public function hasAnyPermit($names){
+		$result=$this->checkPermits($names);
+		return count($result) > 0;
+	}
+
+	public function hasPermit($names){
+		$result=$this->checkPermits($names);
+		return count($result)==count($names);
 	}
 
 	/*
