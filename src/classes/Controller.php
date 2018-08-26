@@ -1,7 +1,7 @@
 <?php
 namespace F3;
 
-abstract class Controller extends \Prefab{
+Class Controller extends \Prefab{
 
 	protected $index='/';
 
@@ -16,27 +16,30 @@ abstract class Controller extends \Prefab{
 		$backtrace=debug_backtrace()[1];
 		$callerClass=strtolower(str_replace('Controller', '', $backtrace['class']));
 		$callerAction=$backtrace['function'];
-		$ext='html';
 
-		echo \F3\Twig::instance()->render("{$callerClass}/{$callerAction}.{$ext}", $data);
+		echo \F3\Twig::instance()->render("{$callerClass}/{$callerAction}.html", $data);
 
 	}
 
-	protected function middleware($name, $args=[]){
+	
+	protected function middleware($name, $value=NULL, array $args=[]){
 
-		$params=isset($args['params'])?$args['params']:NULL;
+		if(\Base::instance()->CLI) return TRUE;
+
+		$action=\F3\DynamicRoute::instance()->getAction();
 
 		if(isset($args['only'])){
 
-			if(in_array(action(), $args['only'])) middleware($name, $params);
+			if(in_array($action, $args['only'])) middleware($name, $value);
 
 		}elseif(isset($args['except'])){
 
-			if(!in_array(action(), $args['except'])) middleware($name, $params);
+			if(!in_array($action, $args['except'])) middleware($name, $value);
 
-		}else middleware($name, $params);				
+		}else middleware($name, $value);				
 
 	}
+	
 
 	protected function validate(array $rules){
 

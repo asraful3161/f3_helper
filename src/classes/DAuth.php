@@ -288,11 +288,12 @@ class DAuth extends \Prefab{
 
 	public function check($role=NULL){
 
-		if($role && $this->auth->check()) return $this->auth->hasRole($this->roleV($role));
+		if($role && $this->auth->check()) return $this->hasRole($role);
 		return $this->auth->check();
 		
 	}
 
+	/*
 	public function verify(){
 
 		$this->verified=FALSE;
@@ -300,6 +301,7 @@ class DAuth extends \Prefab{
 		return $this;
 
 	}
+	*/
 
 	public function execute($ifSuccess=NULL, $ifFail=NULL){
 
@@ -320,6 +322,17 @@ class DAuth extends \Prefab{
 
 	}
 
+	public function hasRole($name){
+
+		return (bool) \Orm\UsersQuery::create()
+			->useRoleQuery()
+			->filterByName($name)
+			->endUse()
+			->findPK($this->auth->getUserId());
+
+	}
+
+	/*
 	public function hasRole($role){
 
 		if($this->auth->hasRole($this->roleV($role))) $this->verified=TRUE;
@@ -343,5 +356,6 @@ class DAuth extends \Prefab{
 		return $this;
 
 	}
+	*/
 
 }

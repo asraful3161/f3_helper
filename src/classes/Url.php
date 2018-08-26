@@ -87,10 +87,6 @@ class Url extends \Prefab{
 		return strrpos($this->f3->PATH, 'api')===1;
 	}
 
-	public function isDir(){
-		return strrpos($this->f3->PATH, 'web')===1;
-	}
-
 	public function path(){
 		return $this->f3->PATH;
 	}

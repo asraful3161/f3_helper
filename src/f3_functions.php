@@ -245,58 +245,6 @@ function bench(){
 	return \F3\Benchmark::instance();
 }
 
-function controller(){
-	return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', f3('PARAMS.Controller')))).'Controller';
-}
-
-function action(){
-
-	$f3=\Base::instance();
-
-	if(\F3\Url::instance()->isDir()){
-
-		$action=strtolower(str_replace('-', '_', \Base::instance()->get('PARAMS.Action')));
-		$prefix=\Base::instance()->get('VERB')=='GET'?'':strtolower(\Base::instance()->get('VERB')).'_';
-		if($action) return $prefix.$action;
-		return $prefix.'index';
-
-	}
-
-	return explode('->', $f3->get('ROUTES.'.$f3->PATTERN.'.0.'.$f3->VERB.'.0'))[1];
-
-}
-
-function dynamicRoute(){
-
-	$f3=\Base::instance();
-
-	$controller=$f3->get('PARAMS.Controller');
-	$action=$f3->get('PARAMS.Action');
-	$prefix=$f3->VERB=='GET'?'':strtolower($f3->VERB).'_';
-
-	//$class=str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $controller))).'Controller';
-	$class=str_replace(['_', '-'], '', ucwords($controller, '_-')).'Controller';
-
-	if(!class_exists($class)) return $f3->error(404);
-
-	if($action){
-
-		$method=$prefix.strtolower(str_replace('-', '_', $action));
-		if(method_exists($class::instance(), $method)){
-			return $class::instance()->$method();
-		}return $f3->error(404);
-
-	}else{
-
-		$method=$prefix.'index';
-		if(method_exists($class::instance(), $method)){
-			return $class::instance()->$method();
-		}return $f3->error(404);
-
-	}
-
-}
-
 function setIntend(){
 	\F3\Url::instance()->intended(\F3\Url::instance()->current());
 }

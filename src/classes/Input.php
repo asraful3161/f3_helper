@@ -94,4 +94,9 @@ class Input extends \Prefab{
 
     }
 
+    public function params($key=NULL){
+        if($key) return \Base::instance()->get("PARAMS.{$key}");
+        return \Base::instance()->PARAMS;
+    }
+
 }

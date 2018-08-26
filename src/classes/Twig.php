@@ -27,6 +27,12 @@ class Twig  extends \Prefab{
 
 		}));
 
+		$this->twig->addFunction(new \Twig_Function('dump', function($data){
+
+			return dump($data);
+
+		}));
+
 		$this->twig->addGlobal('f3', \Base::instance());
 		$this->twig->addGlobal('url', \F3\Url::instance());
 		$this->twig->addGlobal('flash', \F3\Flash::instance());
