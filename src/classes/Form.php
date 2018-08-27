@@ -5,21 +5,20 @@ use \F3\Url;
 
 class Form extends \Prefab{
 
-	protected $formModel;
+	protected $formModel, $sendArray;
 
-	public function btnDelete(array $args=[]){
+	public function btnDelete($url, $pk, array $args=[]){
 
 		$attr=[
-			'url'=>'#',
-			'class'=>'btn btn-danger btn-sm',
+			'class'=>'btn btn-outline-danger btn-sm',
 			'icon'=>'fa-trash-o fa-lg',
 			'title'=>'Delete'
 		];
 
 		$attr=array_merge($attr, $args);
 
-		return "<form method='POST' action='{$attr['url']}' onsubmit=\"return confirm('Press OK! to confirm.')\">
-		<input type='hidden' name='_method' value='DELETE'>
+		return "<form method='POST' action='{$url}' onsubmit=\"return confirm('Press OK! to confirm.')\">
+		<input type='hidden' name='_method' value='DELETE'><input type='hidden' name='_pk' value='{$pk}'>
 		<button type='submit' class='{$attr['class']}'><i class='fa {$attr['icon']}'></i> {$attr['title']}</button>
 		</form>";
 
@@ -43,7 +42,13 @@ class Form extends \Prefab{
 
 				$getter='get'.str_replace(['_', '-'], '', ucwords($name, '_-'));
 				if(method_exists($this->formModel, $getter)){
-					return $this->formModel->$getter();
+
+					if(empty($this->sendArray[$name])){
+						return $this->formModel->$getter();
+					}else{
+						return array_keys($this->formModel->$getter()->toKeyValue());
+					}
+
 				}
 
 				return NULL;
@@ -174,7 +179,12 @@ class Form extends \Prefab{
 
 	public function checkbox($name, $value=NULL, array $args=[]){
 
-		$name=rtrim($name, '[]');
+		$sendArray='';
+
+		if(strpos($name, '[]')!==FALSE){
+			$sendArray='[]';
+			$name=rtrim($name, '[]');
+		}
 
 		$postValue=Input::instance()->old($name);
 
@@ -189,7 +199,7 @@ class Form extends \Prefab{
 
 			$modelValue=$this->modelValue($name);
 
-			if(is_string($modelValue) && $modelValue==$value){
+			if(!is_array($modelValue) && $modelValue==$value){
 
 				$checked='checked';
 
@@ -204,7 +214,7 @@ class Form extends \Prefab{
 		$attributes='';
 		foreach($args as $key=>$row) $attributes.=" {$key}='{$row}'";
 
-		return "<input type='checkbox' name='{$name}' id='{$name}' value='{$value}' {$attributes} {$checked}/>";
+		return "<input type='checkbox' name='{$name}{$sendArray}' id='{$name}' value='{$value}' {$attributes} {$checked}/>";
 
 	}
 
@@ -229,6 +239,16 @@ class Form extends \Prefab{
 
 	public function select($name, array $values=[], $selected=NULL, array $args=[]){
 
+		$sendArray='';
+
+		if(strpos($name, '[]')!==FALSE){
+			$sendArray='[]';
+			$name=rtrim($name, '[]');
+			$this->sendArray[$name]=TRUE;
+		}
+
+		$str=\F3\StrOps::instance();
+
 		$postSelected=Input::instance()->old($name);
 
 		if(!$selected){
@@ -244,7 +264,9 @@ class Form extends \Prefab{
 		$options='';
 		foreach($values as $key=>$title){
 
-			if(is_string($selected) && $key==$selected){
+			$title=$str->get($title)->toTitle();
+
+			if(!is_array($selected) && $key==$selected){
 				$options.="<option value='$key' selected>{$title}</option>";
 			}elseif(is_array($selected) && in_array($key, $selected)){
 				$options.="<option value='$key' selected>{$title}</option>";
@@ -252,7 +274,7 @@ class Form extends \Prefab{
 
 		}
 
-		return "<select name='{$name}' id='{$name}' {$attributes}>\n{$options}\n</select>";
+		return "<select name='{$name}{$sendArray}' id='{$name}' {$attributes}>\n{$options}\n</select>";
 
 	}
 
@@ -271,20 +293,11 @@ class Form extends \Prefab{
 
 	}
 
-	public function link(string $title='Link', array $args=[]){
+	public function link(string $title, string $url, array $args=[]){
 
-		$attr=[
-			'url'=>'#'
-		];
-
-		$attr=array_merge($attr, $args);
-
-		$href=$attr['url'];
-		unset($attr['url']);
 		$attributes='';
-		foreach($attr as $key=>$row) $attributes.=" {$key}='{$row}'";
-
-		return "<a href='{$href}' {$attributes}>\n{$title}\n</a>";
+		foreach($args as $key=>$row) $attributes.=" {$key}='{$row}'";
+		return "<a href='{$url}' {$attributes}>\n{$title}\n</a>";
 
 	}
 

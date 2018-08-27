@@ -129,6 +129,8 @@ class BS4 extends \Prefab{
 
 	public function select($name, $label=NULL, array $values=[], $selected=NULL, array $args=[]){
 
+		$filteredName=rtrim($name, '[]');
+
 		$attr=[
 			'class'=>'form-control',
 			'groupClass'=>'form-group',
@@ -138,14 +140,14 @@ class BS4 extends \Prefab{
 
 		$error_msg='';
 
-		if(Input::instance()->error()->exists($name)){
+		if(Input::instance()->error()->exists($filteredName)){
 
-			$error_msg=Input::instance()->error()->msg($name);
+			$error_msg=Input::instance()->error()->msg($filteredName);
 			$attr['class'].=' is-invalid';
 
 		}
 
-		if(!$label) $label=ucwords(str_replace(['_', '-'], ' ', $name));
+		if(!$label) $label=ucwords(str_replace(['_', '-'], ' ', $filteredName));
 
 		return "<div class='{$attr['groupClass']}'>\n<label for='{$name}'>{$label}</label>\n".$this->form->select($name, $values, $selected, $attr)."\n<div class='invalid-feedback'>{$error_msg}</div>\n</div>";
 
@@ -171,7 +173,7 @@ class BS4 extends \Prefab{
 
 		$attr=[
 			'type'=>'submit',
-			'class'=>'btn btn-outline-primary btn-sm',
+			'class'=>'btn btn-primary btn-sm',
 			'icon'=>'fa-dot-circle-o'
 		];
 
@@ -183,10 +185,10 @@ class BS4 extends \Prefab{
 
 	}
 
-	public function link(string $title='Link', array $args=[]){
+	public function link($title='Link', $url='#', $args=[]){
 
 		$attr=[
-			'class'=>'btn btn-light btn-sm',
+			'class'=>'btn btn-outline-info btn-sm',
 			'icon'=>'fa-link'
 		];
 
@@ -194,8 +196,12 @@ class BS4 extends \Prefab{
 		if($attr['icon']) $title="<i class='fa {$attr['icon']}'></i> ".$title;
 		unset($attr['icon']);
 
-		return $this->form->link($title, $attr);
+		return $this->form->link($title, $url, $attr);
 
+	}
+
+	public function btnDelete($url, $pk, $args=[]){
+		return $this->form->btnDelete($url, $pk, $args);
 	}
 
 }

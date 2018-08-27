@@ -1,9 +1,6 @@
 <?php
 namespace F3;
 
-use \F3\Flash;
-use \F3\Url;
-
 class Redirect extends \Prefab{
 
     protected $f3, $flash;
@@ -17,7 +14,7 @@ class Redirect extends \Prefab{
 
     public function to($url){
 
-        $this->f3->reroute(Url::instance()->to($url));
+        $this->f3->reroute(\F3\Url::instance()->to($url));
 
     }
 
@@ -57,6 +54,22 @@ class Redirect extends \Prefab{
     public function withError($errors){
 
         $this->flash->set('errors', $errors);
+        return $this;
+
+    }
+
+    public function WithStatus($status, array $args=[]){
+
+        $attr=[
+            'success'=>'Request submitted successfully!.',
+            'failed'=>'Sorry!, form submission failed.',
+            'name'=>'alert_status'
+        ];
+
+        $attr=array_merge($attr, $args);
+
+        if(empty($status)) $this->flash->set($attr['name'], ['danger'=>$attr['failed']]);
+        else $this->flash->set($attr['name'], ['success'=>$attr['success']]);
         return $this;
 
     }

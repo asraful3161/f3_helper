@@ -341,39 +341,65 @@ class DAuth extends \Prefab{
 
 	}
 
+	public function getRoleName(){
+
+		$userId=$this->auth->getUserId();
+
+		return medoo()->get('role',
+		[//Joining
+			"[><]users"=>['id'=>'role_id']
+		],//Select column
+		'name',
+		[//Conditions
+			'users.id'=>$userId
+		]);
+
+	}
+
 	public function hasRole($name){
 
 		$userId=$this->auth->getUserId();
 
-		$result=db()->exec("
-			SELECT `users`.`id`
-			FROM `users`, `role`
-			WHERE `users`.`role_id`=`role`.`id`
-			AND `users`.`id`='{$userId}'
-			AND `role`.`name`='{$name}'
-			LIMIT 1");
-
-		if(isset($result[0]['id']) && $result[0]['id']==$userId) return TRUE;
-		return FALSE;
+		return medoo()->has('users',
+		[//Joining
+			"[><]role"=>['role_id'=>'id']
+		],[//Conditions
+			'users.id'=>$userId,
+			'role.name'=>$name
+		]);
 
 	}
 
 	protected function checkPermits(array $names){
 
 		$userId=$this->auth->getUserId();
-		$in="'".implode("', '", $names)."'";
 
-		$result=db()->exec("
-			SELECT `permit`.`name`
-			FROM `users`, `role`, `permit`, `permit_role`
-			WHERE `users`.`id`='{$userId}'
-			AND `users`.`role_id`=`role`.`id`
-			AND `role`.`id`=`permit_role`.`role_id`
-			AND `permit`.`id`=`permit_role`.`permit_id`
-			AND `permit`.`name`
-			IN({$in})");
+		return medoo()->count('permit',[//Joining
+			'[><]role_permit'=>['id'=>'permit_id'],
+			'[><]role'=>['role_permit.role_id'=>'id'],
+			'[><]users'=>['role.id'=>'role_id']
+		],//Columns
+		'permit.name',
+		[//conditions
+			'users.id'=>$userId,
+			'permit.name'=>$names
+		]);
 
-		return count($result);
+	}
+
+	public function getPermits(){
+
+		$userId=$this->auth->getUserId();
+
+		return medoo()->select('permit',[//Joining
+			'[><]role_permit'=>['id'=>'permit_id'],
+			'[><]role'=>['role_permit.role_id'=>'id'],
+			'[><]users'=>['role.id'=>'role_id']
+		],//Columns
+		'permit.name',
+		[//conditions
+			'users.id'=>$userId
+		]);
 
 	}
 

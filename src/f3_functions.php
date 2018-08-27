@@ -82,24 +82,27 @@ function matrix_uid($cell=null, $encrypt=false){
 
 function validator($args){
 
+	//Unique rules for post: 'unique'=>[['field_1', 'table_1'], ['field_2', 'table_2']]
+	//Unique rules for put: 'unique'=>[['field_1', 'table_1', '_pk'], ['field_2', 'table_2', '_pk']]
+
 	\Valitron\Validator::addRule('unique', function($field, $value, array $params, array $fields){
 
-		//die(pr($params));
+		//dd($params);
 
 		if(isset($params[1])){
-			$result=current(matrix_exists($params[0].'.'.$field, $value, true));
+			$result=current(matrix_exists($params[0].'.'.$field, $value, TRUE));
 			//die(pr($result));
-			if($result && $result[$field]==$value && $result['id']==$params[1]) return true;
-			elseif(!$result) return true;
-			return false;
-		}elseif(matrix_exists($params[0].'.'.$field, $value)) return false;
-		return true;
+			if($result && $result[$field]==$value && $result['id']==$params[1]) return TRUE;
+			elseif(!$result) return TRUE;
+			return FALSE;
+		}elseif(matrix_exists($params[0].'.'.$field, $value)) return FALSE;
+		return TRUE;
 
 	}, '{field} already exists in records');
 
 	\Valitron\Validator::addRule('exists', function($field, $value, array $params, array $fields){
 
-		if(strpos($params[0], '.')!==false) return matrix_exists($params[0], $value);
+		if(strpos($params[0], '.')!==FALSE) return matrix_exists($params[0], $value);
 		return matrix_exists($params[0].'.'.$field, $value);		
 
 	}, '{field} does not exists in records');
@@ -255,4 +258,8 @@ function orm($model){
 
 function str($data){
 	return \F3\StrOps::instance()->get($data);
+}
+
+function carbon(){
+	return new \Carbon\Carbon;
 }

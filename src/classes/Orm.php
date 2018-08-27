@@ -50,6 +50,10 @@ class Orm extends \Prefab{
 		return $this->query::create()->findPK($pk);
 	}
 
+	public function findPKs(array $pks){
+		return $this->query::create()->findPKs($pks);
+	}
+
 	public function pluck($key, $value){
 		return $this->query::create()->find()->toKeyValue($key, $value);
 	}
