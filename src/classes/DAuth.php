@@ -15,7 +15,7 @@ class DAuth extends \Prefab{
 	public function __construct(){
 
 		$f3=\Base::instance();
-		$this->auth=new Auth(\F3\DB::instance()->get()->pdo());
+		$this->auth=new Auth(\F3\DB::instance()->medoo()->pdo);
 
 	}
 

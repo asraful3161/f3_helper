@@ -32,9 +32,11 @@ function url($url=NULL){
 
 }
 
+/*
 function db(){
 	return \F3\DB::instance()->get();
 }
+*/
 
 function mapper($table){
 	return new \DB\SQL\Mapper(db(), $table);

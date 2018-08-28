@@ -5,23 +5,25 @@ use Medoo\Medoo;
 
 class DB extends \Prefab{
 
-	private $db, $medoo, $dsn;
+	private /*$db,*/ $medoo, $dsn;
 	
 	public function __construct(){
 
 		$f3=\Base::instance();
 
+		
 		if($f3->DB_DRIVER=='mysql'){
 
 			$this->dsn="mysql:host={$f3->DB_HOST};port={$f3->DB_PORT};dbname={$f3->DB_NAME}";
-			$this->db=new \DB\SQL($this->dsn, $f3->DB_USER, $f3->DB_PASS);
+			//$this->db=new \DB\SQL($this->dsn, $f3->DB_USER, $f3->DB_PASS);
 
 		}elseif($f3->DB_DRIVER=='sqlite'){
 
 			$this->dsn="sqlite:{$f3->get('SQLITE_PATH')}";
-			$this->db=new \DB\SQL($this->dsn);
+			//$this->db=new \DB\SQL($this->dsn);
 
 		}
+		
 
 		$this->medoo=new Medoo([
 
@@ -65,22 +67,24 @@ class DB extends \Prefab{
 
 	}
 
+	/*
 	public function get(){
 		return $this->db;
 	}
+	*/
 
 	public function medoo(){
 		return $this->medoo;
 	}
 
-	public function exists($matrix, $v, $fullRowFlag=FALSE){
+	public function exists($matrix, $value, $fullRowFlag=FALSE){
 
 		$matrix=explode('.', $matrix);
 		if(count($matrix)!=2) return NULL;
-		list($t, $f)=$matrix; //$t for table, $f for field
-		$result=$this->db->exec("SELECT * FROM `$t` WHERE `$f`='$v'");
-		if($fullRowFlag) return $result;
-		return $this->db->count();
+		list($table, $field)=$matrix;
+
+		if($fullRowFlag) return $this->medoo->get($table, '*', [$field=>$value]);
+		return $this->medoo->has($table, [$field=>$value]);
 
 	}
 
