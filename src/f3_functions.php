@@ -67,8 +67,8 @@ function timestamp($timestamps=null, $format='Y-m-d H:i:s'){
 	return date($format);
 }
 
-function matrix_exists($cell=null, $v=null, $full_rows=false){
-	return \F3\DB::instance()->exists($cell, $v, $full_rows);
+function matrix_exists($cell=null, $value=null, $full_rows=false){
+	return \F3\DB::instance()->exists($cell, $value, $full_rows);
 }
 
 function matrix_uid($cell=null, $encrypt=false){
@@ -92,7 +92,7 @@ function validator($args){
 		//dd($params);
 
 		if(isset($params[1])){
-			$result=current(matrix_exists($params[0].'.'.$field, $value, TRUE));
+			$result=matrix_exists($params[0].'.'.$field, $value, TRUE);
 			//die(pr($result));
 			if($result && $result[$field]==$value && $result['id']==$params[1]) return TRUE;
 			elseif(!$result) return TRUE;
@@ -219,14 +219,24 @@ function middleware($key=NULL, $args=[]){
 
 function middleware($name, $args=NULL){
 
-	$class="\\Middleware\\".str_replace(['_', '-'], '', ucwords($name, '_-'));
+	//To call multiple middleware as name arguments.
+	if(is_string($name)){
 
-	if(class_exists($class)){
-		if($args) return $class::instance()->run($args);
-		return $class::instance()->run();
+		$class="\\Middleware\\".str_replace(['_', '-'], '', ucwords($name, '_-'));
+		if(class_exists($class)){
+			if($args) return $class::instance()->run($args);
+			return $class::instance()->run();
+		}
+		\Base::instance()->error(404);
+
+	}elseif(is_array($name)){
+
+		foreach($name as $key=>$value){
+			if(is_string($key)) middleware($key, $value);
+			else middleware($value);
+		}
+
 	}
-
-	\Base::instance()->error(404);
 
 }
 
