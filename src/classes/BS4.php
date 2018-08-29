@@ -204,4 +204,22 @@ class BS4 extends \Prefab{
 		return $this->form->btnDelete($url, $pk, $args);
 	}
 
+	public function tBadge($logic, $trueValue=NULL, $falseValue='Not Specified', array $args=[]){
+
+		$attr=[
+			'trueBadge'=>'info',
+			'falsebadge'=>'danger',
+			'addClass'=>NULL,
+		];
+
+		$attr=array_merge($attr, $args);
+
+		if(empty($logic)){
+			return "<span class='badge badge-{$attr['falsebadge']} {$attr['addClass']}'><i>{$falseValue}</i></span>";
+		}elseif($trueValue){
+			return "<span class='badge badge-{$attr['trueBadge']} {$attr['addClass']}'>{$trueValue}</span>";
+		} return "<span class='badge badge-{$attr['trueBadge']} {$attr['addClass']}'>{$logic}</span>";	
+
+	}
+
 }

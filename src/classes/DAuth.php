@@ -370,23 +370,6 @@ class DAuth extends \Prefab{
 
 	}
 
-	protected function checkPermits(array $names){
-
-		$userId=$this->auth->getUserId();
-
-		return medoo()->count('permit',[//Joining
-			'[><]role_permit'=>['id'=>'permit_id'],
-			'[><]role'=>['role_permit.role_id'=>'id'],
-			'[><]users'=>['role.id'=>'role_id']
-		],//Columns
-		'permit.name',
-		[//conditions
-			'users.id'=>$userId,
-			'permit.name'=>$names
-		]);
-
-	}
-
 	public function getPermits(){
 
 		$userId=$this->auth->getUserId();
@@ -403,14 +386,34 @@ class DAuth extends \Prefab{
 
 	}
 
-	public function hasAnyPermit($names){
-		$result=$this->checkPermits($names);
-		return count($result) > 0;
+	public function hasPermit($name){
+
+		//Take mixed value as name such as string and array
+		//And medoo will return value according to the argument
+
+		$userId=$this->auth->getUserId();
+
+		return medoo()->count('permit', [//Joining
+			'[><]role_permit'=>['id'=>'permit_id'],
+			'[><]role'=>['role_permit.role_id'=>'id'],
+			'[><]users'=>['role.id'=>'role_id']
+		],//Columns
+		'permit.name',
+		[//conditions
+			'users.id'=>$userId,
+			'permit.name'=>$name
+		]);
+
 	}
 
-	public function hasPermit($names){
-		$result=$this->checkPermits($names);
-		return count($result)==count($names);
+	public function hasAnyPermit(array $names){
+		$result=$this->hasPermit($names);
+		return $result > 0;
+	}
+
+	public function hasAllPermit(array $names){
+		$result=$this->hasPermit($names);
+		return $result==count($names);
 	}
 
 	/*
