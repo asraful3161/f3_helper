@@ -5,6 +5,7 @@ Class Controller extends \Prefab{
 
 	protected $index='/';
 
+
 	public function index(){
 
 		\F3\Redirect::instance()->to($this->index);
@@ -50,6 +51,15 @@ Class Controller extends \Prefab{
 		if(!$v->validate()){
 			\F3\Redirect::instance()->with('validation_alert', ['danger'=>'Validation failed.'])->withInput($v->errors())->toBack();
 		}
+
+	}
+
+	public function beforeRoute(){
+		\RouteRegistry::instance()->run();
+		$this->preload();
+	}
+
+	protected function preload(){
 
 	}
 

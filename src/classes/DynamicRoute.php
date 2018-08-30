@@ -32,7 +32,7 @@ Class DynamicRoute extends \Prefab{
 			if(method_exists($class::instance(), $method)){
 				$this->controller=$class;
 				$this->action=$method;
-				if(method_exists($class::instance(), 'beforeRoute')) $class::instance()->beforeRoute();
+				$class::instance()->beforeRoute();
 				$class::instance()->$method();
 			}else $f3->error(404);
 
