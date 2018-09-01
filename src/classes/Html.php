@@ -8,7 +8,8 @@ class Html extends \Prefab{
 	}
 
 	public function titleCase($str){
-		return \F3\StrOps::instance()->get($str)->toTitle();
+		if(is_string($str)) return \F3\StrOps::instance()->get($str)->toTitle();
+		return NULL;
 	}
 
 }

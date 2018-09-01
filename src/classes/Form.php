@@ -71,6 +71,7 @@ class Form extends \Prefab{
 
 		$attr=array_merge($attr, $args);
 
+		$method=strtoupper($attr['method']);
 		$methodField='';
 
 		if($attr['model']){
@@ -84,13 +85,15 @@ class Form extends \Prefab{
 				if($attr['update']) $attr['url']=$attr['update'];
 			}
 
+		}elseif($method=='PUT' || $method=='DELETE'){
+			$methodField="<input type='hidden' name='_method' value='{$method}'>";
 		}
 
 		$attributes='';
 
 		foreach($moreArgs as $key=>$value) $attributes.=" {$key}='{$value}'";
 
-		return "<form action='{$attr['url']}' method='{$attr['method']}' {$attributes}>\n{$this->csrf_field()}\n{$methodField}";
+		return "<form action='{$attr['url']}' method='POST' {$attributes}>\n{$this->csrf_field()}\n{$methodField}";
 
 	}
 
