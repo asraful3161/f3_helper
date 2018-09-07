@@ -3,25 +3,27 @@ namespace F3;
 
 class Middleware extends \Prefab{
 
-	protected $list;
+	final public function call($name, $args=NULL){
+		//To call multiple middleware as name arguments.
+		if(is_string($name)){
 
-	public function __construct(){
+			$method=lcfirst(str_replace(['_', '-'], '', ucwords($name, '_-')));
 
-		$this->list=new \F3\Std;
+			if(method_exists($this, $method)){
+				if($args) return $this->$method($args);
+				return $this->$method();
+			}
 
-	}
+			\Base::instance()->error(404);
 
-	public function set($key, $action){
+		}elseif(is_array($name)){
 
-		$this->list->set($key, $action);
-		return $this;
+			foreach($name as $key=>$value){
+				if(is_string($key)) $this->call($key, $value);
+				else $this->call($value);
+			}
 
-	}
-
-	public function get($key, $args=[]){
-		$action=$this->list->get($key);
-		if(is_callable($action)) return call_user_func_array($action, $args);
-		return FALSE;
+		}
 	}
 
 }
